@@ -4,4 +4,3 @@ build-impl.xml
 *.properties
 project.xml
 private.xml
-/build/
