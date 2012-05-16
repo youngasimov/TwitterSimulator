@@ -5,52 +5,59 @@
 package usm.simulacion.twitter.simulator;
 
 import usm.simulacion.twitter.core.EventBus;
-import usm.simulacion.twitter.core.TimeEvent;
 
 /**
  *
  * @author camilovera
  */
-public class SocialEventsSimulator {
+public class EventsManager {
     
     private EventBus eventBus;
+    private NetworkManager networkManager;
     
-    public SocialEventsSimulator(EventBus eventBus){
+    public EventsManager(EventBus eventBus,NetworkManager networkManager){
         this.eventBus = eventBus;
+        this.networkManager = networkManager;
         bind();
     }
     
     private void bind(){
-        this.eventBus.registerEventHandler(TimeEvent.TYPE,new usm.simulacion.twitter.core.TimeEventHandler() {
-
-            @Override
-            public void onTimeEvent(TimeEvent event) {
-                SocialEventsSimulator.this.onTimeEvent(event.getTime());
-            }
-        });
+        
         this.eventBus.registerEventHandler(NewTweetEvent.TYPE, new NewTweetEventHandler() {
 
             @Override
             public void onNewTweet(NewTweetEvent event) {
-                SocialEventsSimulator.this.onNewTweet(event);
+                EventsManager.this.onNewTweet(event);
             }
         });
-    }
-    
-    /**
-     * se ejecuta constantemente a medida que avanza la simulación.
-     * implementa la generación de eventos relacionados con la red
-     * @param time 
-     */
-    public void onTimeEvent(long time){
         
+        this.eventBus.registerEventHandler(NewReTweetEvent.TYPE, new NewReTweetEventHandler() {
+
+            @Override
+            public void onReTweet(NewReTweetEvent event) {
+                EventsManager.this.onNewReTweet(event);
+            }
+        });
     }
     
     /**
      * se ejecuta cada vez que recibe un evento de nuevo tweet
      * @param event 
      */
-    public void onNewTweet(NewTweetEvent event){
+    private void onNewTweet(NewTweetEvent event){
         
+        
+        
+        networkManager.generateEvent(event);
+    }
+    
+    /**
+     * se ejecuta cada vez que recibe un evento de nuevo re-tweet
+     * @param event 
+     */
+    private void onNewReTweet(NewReTweetEvent event){
+        
+        
+        networkManager.generateEvent(event);
     }
 }

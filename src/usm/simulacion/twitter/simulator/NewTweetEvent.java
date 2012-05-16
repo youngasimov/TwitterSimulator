@@ -15,19 +15,19 @@ public class NewTweetEvent implements Event<NewTweetEventHandler>{
 
     public static Type<NewTweetEventHandler> TYPE = new Type<NewTweetEventHandler>();
     
-    private User user;
-    private Tweet tweet;
+    private UserBase user;
+    private TweetBase tweet;
     
-    public NewTweetEvent(User user, Tweet tweet){
+    public NewTweetEvent(UserBase user, TweetBase tweet){
         this.user = user;
         this.tweet = tweet;
     }
 
-    public Tweet getTweet() {
+    public TweetBase getTweet() {
         return tweet;
     }
 
-    public User getUser() {
+    public UserBase getUser() {
         return user;
     }
     
