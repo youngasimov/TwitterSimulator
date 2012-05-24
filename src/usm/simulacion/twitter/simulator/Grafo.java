@@ -17,7 +17,7 @@ public class Grafo {
 
    private ArrayList<User> users;  // lista de usuarios
    private Lista lista; // lista de Nodos
-   private int nNodo;   // contador de cantidad de Nodos
+   private int nNodo;   // contador de cantidad de Nodos a
 
    class Nodo {
        
