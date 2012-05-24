@@ -8,6 +8,6 @@ package usm.simulacion.twitter.core;
  *
  * @author camilovera
  */
-public interface SimulationEventHandler extends EventHandler {
-    void onSimulationEvent(SimulationEvent event);
+public interface FutureEventEventHandler extends EventHandler{
+    public void onFutureEvent(FutureEventEvent event);
 }

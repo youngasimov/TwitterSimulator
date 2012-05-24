@@ -10,6 +10,6 @@ import usm.simulacion.twitter.core.EventHandler;
  *
  * @author camilovera
  */
-public interface AddUserEventHandler extends EventHandler{
-    public void addUser(AddUserEvent event);
+public interface AddFollowerEventHandler extends EventHandler {
+    public void addFollower(AddFollowerEvent event);
 }
