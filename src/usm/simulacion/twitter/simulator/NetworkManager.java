@@ -31,7 +31,7 @@ public class NetworkManager{
     private Map<String,Double> doubleData;
     private long time;
     private int nUsers;
-    Grafo Red = new Grafo();  // se crea el grafo que contendra la red.
+    //Grafo Red = new Grafo();  // se crea el grafo que contendra la red.
     
     
     public NetworkManager(EventBus eventBus,EventGeneratorAlgoritm algoritm){
