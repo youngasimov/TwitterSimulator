@@ -175,7 +175,7 @@ public class NetworkManager{
     private void onAddUser(User user){
         if(user instanceof User){
             // inserta un usuario en un nodo de la red
-            Red.insertaNodo(user, user.getId());
+            Red.insertaNodo(user);
             
       // System.out.println("se a añadido un nuevo usuario al grafo: "+user.getName());
             
