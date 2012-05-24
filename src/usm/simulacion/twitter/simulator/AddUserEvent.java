@@ -15,13 +15,13 @@ public class AddUserEvent implements Event<AddUserEventHandler> {
 
     public static Type<AddUserEventHandler> TYPE = new Type<AddUserEventHandler>();
     
-    private UserBase user;
+    private User user;
     
-    public AddUserEvent(UserBase user){
+    public AddUserEvent(User user){
         this.user = user;
     }
     
-    public UserBase getUser(){
+    public User getUser(){
         return this.user;
     }
     

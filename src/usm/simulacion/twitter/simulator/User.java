@@ -10,11 +10,11 @@ import java.util.List;
  *
  * @author camilovera
  */
-public class User implements UserBase, HasIncomingTweets, HasOwnTweets{
+public class User implements HasIncomingTweets, HasOwnTweets{
     
     
-    private List<TweetBase> incomingTweets;
-    private List<TweetBase> ownTweets;
+    private List<Tweet> incomingTweets;
+    private List<Tweet> ownTweets;
     private String name;
     private int id;
     
@@ -45,8 +45,8 @@ public class User implements UserBase, HasIncomingTweets, HasOwnTweets{
     }
 
     @Override
-    public TweetBase getIncomingTweet(int id) {
-        TweetBase aux = new Tweet(id);
+    public Tweet getIncomingTweet(int id) {
+        Tweet aux = new Tweet(id);
         if(incomingTweets.contains(aux)){
             return incomingTweets.get(incomingTweets.indexOf(aux));
         }else{
@@ -55,23 +55,23 @@ public class User implements UserBase, HasIncomingTweets, HasOwnTweets{
     }
 
     @Override
-    public List<TweetBase> getIncomingTweets() {
+    public List<Tweet> getIncomingTweets() {
         return incomingTweets;
     }
 
     @Override
-    public void addIncomingTweet(TweetBase tweet) {
+    public void addIncomingTweet(Tweet tweet) {
         incomingTweets.add(tweet);
     }
 
     @Override
-    public List<TweetBase> getOwnTweets() {
+    public List<Tweet> getOwnTweets() {
         return ownTweets;
     }
 
     @Override
-    public TweetBase getOwnTweet(int id) {
-        TweetBase aux = new Tweet(id);
+    public Tweet getOwnTweet(int id) {
+        Tweet aux = new Tweet(id);
         if(ownTweets.contains(aux)){
             return ownTweets.get(ownTweets.indexOf(aux));
         }else{
@@ -80,7 +80,7 @@ public class User implements UserBase, HasIncomingTweets, HasOwnTweets{
     }
 
     @Override
-    public void addOwnTweet(TweetBase tweet) {
+    public void addOwnTweet(Tweet tweet) {
         ownTweets.add(tweet);
     }
     

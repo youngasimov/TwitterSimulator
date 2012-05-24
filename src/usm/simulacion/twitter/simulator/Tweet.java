@@ -8,18 +8,17 @@ package usm.simulacion.twitter.simulator;
  *
  * @author camilovera
  */
-public class Tweet implements TweetBase{
+public class Tweet {
     
+    private User owner;
     private String messagee;
+    private double timeMark;
     private int id;
     private int steps;
-    private User owner;
     
     public Tweet(int id){
         this.id = id;
     }
-    
-    @Override
     public int getId(){
         return id;
     }
@@ -35,20 +34,22 @@ public class Tweet implements TweetBase{
     public void setSteps(int steps) {
         this.steps = steps;
     }
-    
-    @Override
     public String getMessage(){
         return messagee;
     }
-    
-    @Override
     public int getSteps(){
         return steps;
     }
-    
-    @Override
     public User getOwner(){
         return owner;
+    }
+
+    public double getTimeMark() {
+        return timeMark;
+    }
+
+    public void setTimeMark(double timeMark) {
+        this.timeMark = timeMark;
     }
 
     @Override

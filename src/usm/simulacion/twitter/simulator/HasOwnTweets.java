@@ -11,7 +11,7 @@ import java.util.List;
  * @author camilovera
  */
 public interface HasOwnTweets {
-    List<TweetBase> getOwnTweets();
-    TweetBase getOwnTweet(int id);
-    void addOwnTweet(TweetBase tweet);
+    List<Tweet> getOwnTweets();
+    Tweet getOwnTweet(int id);
+    void addOwnTweet(Tweet tweet);
 }

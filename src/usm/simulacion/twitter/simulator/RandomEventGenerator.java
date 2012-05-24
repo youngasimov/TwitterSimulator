@@ -33,7 +33,7 @@ public class RandomEventGenerator implements EventGeneratorAlgoritm{
     @Override
     public Event generateEvent(Event procecedEvent) {
         List<User> users = network.getUsers();
-        UserBase user = users.get(Math.round((float)(Math.random()*(users.size()-1))));
+        User user = users.get(Math.round((float)(Math.random()*(users.size()-1))));
         return new NewTweetEvent(user, new Tweet(Math.round((float)(Math.random()*4 + Math.random()*73 + Math.random()*306 + Math.random()*1234))));
     }
     

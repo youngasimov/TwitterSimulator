@@ -11,7 +11,7 @@ import java.util.List;
  * @author camilovera
  */
 public interface HasIncomingTweets {
-    List<TweetBase> getIncomingTweets();
-    TweetBase getIncomingTweet(int id);
-    void addIncomingTweet(TweetBase tweet);
+    List<Tweet> getIncomingTweets();
+    Tweet getIncomingTweet(int id);
+    void addIncomingTweet(Tweet tweet);
 }
