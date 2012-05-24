@@ -15,20 +15,32 @@ import java.util.ArrayList;
  */
 public class Grafo {
 
-   private ArrayList<User> users;  // lista de usuarios
-   private Lista lista; // lista de Nodos
-   private int nNodo;   // contador de cantidad de Nodos a
+   private ArrayList<Nodo> users;  // lista de usuarios
+   //private Lista lista;  lista de Nodos que no ocupare
+   private int nNodo;   // contador de cantidad de Nodos 
 
+
+   /**
+    * La clase nodo tiene un objeto elemento el cual seran usuarios
+    * un arreglo de enlaces a sus followers
+    * y un arreglo de enlaces a sus following
+    */
    class Nodo {
        
 	Object elemento;
-	Lista listaEnlaces;
+        ArrayList<Enlace> listaEnlacesFollower;
+        ArrayList<Enlace> listaEnlacesFollowing;
 	int id;
+        //Lista listaEnlaces;  antiguo
+	
         
 	public Nodo(Object elemento) {
 	   this.elemento = elemento;
-    	   listaEnlaces = new Lista();
-	   id = 0;
+           listaEnlacesFollower = new ArrayList();
+           listaEnlacesFollowing = new ArrayList();
+    	   id = 0;
+           //listaEnlaces = new Lista();
+	   
 	}
 	public boolean equals(Object nodo) {
 	   if (nodo==null) return false;
@@ -43,8 +55,11 @@ public class Grafo {
         public int getId() {
             return id;
         }
-        public Lista getListaEnlaces() {
-            return listaEnlaces;
+        public ArrayList getlistaEnlacesFollower() {
+            return listaEnlacesFollower;
+        }
+        public ArrayList getlistaEnlacesFollowing() {
+            return listaEnlacesFollowing;
         }
    }
 
@@ -53,9 +68,9 @@ public class Grafo {
    class Enlace {
 	Nodo nodo;
 	//double peso;
-	public Enlace(Object elemento, double peso) {
+	public Enlace(Object elemento) {
 	   			
-	  	Object p = ListaUtil.buscar(lista,new Nodo(elemento));
+	  	Object p = ListaUtil.buscar(lista ,new Nodo(elemento));
 	    	if (p==null) return;
 	    	nodo = (Nodo)lista.recupera(p);
 	    	//this.peso = peso;
@@ -63,9 +78,9 @@ public class Grafo {
 }
        public Enlace(Object elemento) {
     	   			
-      	Object p = ListaUtil.buscar(lista,new Nodo(elemento));
+      	Object p = ListaUtil.buscar(users,new Nodo(elemento));
 		if (p==null) return;
-		nodo = (Nodo)lista.recupera(p);
+		nodo = (Nodo)users. ; //lista.recupera(p);
     	    
   	}
   	public boolean equals(Object enlace) {
@@ -82,15 +97,20 @@ public class Grafo {
 	
    // Contruye un nuevo grafo
    public Grafo() {
-lista = new Lista();
-nNodo = 0;
+
+    users = new ArrayList();
+    // lista = new Lista();  antiguo
+    nNodo = 0;
+
    }
    // Inserta un nuevo nodo en el grafo con el elemento dado
-   public void insertaNodo(Object elemento, int id) {
-    	if (contieneNodo(elemento)) return;
-    	Nodo nodo = new Nodo(elemento);
-    	lista.inserta(lista.fin(),nodo);
-        nodo.id = id;
+   public void insertaNodo(Object elemento3) {
+    	//if (contieneNodo(elemento3)) return;
+    	Nodo nodo = new Nodo(elemento3);
+
+        users.add(nodo);
+         //lista.inserta(lista.fin(),nodo);
+        //nodo.id = id;
         nNodo++;
         
    }
@@ -108,12 +128,12 @@ nNodo = 0;
    }
    // Devuelve un booleano que indica si el grafo es vacio
    public boolean esVacio() {
-    	return (lista.vacia());
+    	return (users.isEmpty());
    }
    // Devuelve un booleano que indica si el grafo contiene 
    // un nodo con elemento
     public boolean contieneNodo(Object elemento) {
-    	Object p = ListaUtil.buscar(lista,new Nodo(elemento));
+    	Object p = ListaUtil.buscar(users,new Nodo(elemento));
 	if (p==null) return false;
     	return true;
    }
@@ -122,17 +142,17 @@ nNodo = 0;
    // entre los nodos con elemento1 y elemento2
    public boolean contieneEnlace(Object elemento1, Object elemento2) {
     	
-	   Object p = ListaUtil.buscar(lista,new Nodo(elemento1));
+	   Object p = ListaUtil.buscar(users,new Nodo(elemento1));
 	   if (p==null) return false;
-	   Nodo n = (Nodo)lista.recupera(p);
-	   Lista l=n.listaEnlaces;
-	   Object q = ListaUtil.buscar(l,new Enlace(elemento2));
-	   if (q==null) return false;
+	   //Nodo n = (Nodo)users.recupera(p);  * MODIFICAR
+	   //Lista l=n.listaEnlaces;  // MODIFICAR
+	   //Object q = ListaUtil.buscar(l,new Enlace(elemento2));
+	   //if (q==null) return false;
 	   return true;
 	
    }
    // Borra el nodo con el elemento dado
-   public void borraNodo(Object elemento) {
+  /* public void borraNodo(Object elemento) {
     	
 	   Object p = ListaUtil.buscar(lista,new Nodo(elemento));
 	   if (p==null) return;
@@ -147,9 +167,9 @@ nNodo = 0;
 		if (q!=null) l.suprime(q);
 	   }
 	
-   }
+   } */
    // Bora el enlace entre los nodos con elemento1 y elemento2
-   public void borraEnlace(Object elemento1, Object elemento2) {
+   /*public void borraEnlace(Object elemento1, Object elemento2) {
     	
 	   Object p = ListaUtil.buscar(lista,new Nodo(elemento1));
 	   if (p==null) return;
@@ -158,12 +178,12 @@ nNodo = 0;
 	   Object q = ListaUtil.buscar(l,new Enlace(elemento2));
 	   if (q!=null) l.suprime(q);
 	 
-   }
+   }*/
    // Devuelve la lista de nodos
-   public Lista listaNodos() {
+  /* public ArrayList listaNodos() {
     	
-    	   Lista l = new Lista();
-    	   if (lista.vacia()) return l;
+       ArrayList l = new ArrayList();
+    	   if (l.isEmpty()) return l;
     	   for(Object p=lista.primero();!p.equals(lista.fin());
                     p=lista.siguiente(p)) {
     		Nodo n = (Nodo)lista.recupera(p);
@@ -171,9 +191,9 @@ nNodo = 0;
     	   }
 	   return l;
 	
-   }
+   }*/
    // Devuelve la lista de elementos enlazados a un nodo
-   public Lista listaEnlaces(Object elemento) {
+ /*  public Lista listaEnlaces(Object elemento) {
 				
 	   Object p = ListaUtil.buscar(lista,new Nodo(elemento));
 	   if (p==null) return null;
@@ -187,7 +207,7 @@ nNodo = 0;
     	   }
 	   return l;
 	 
-   }
+   }*/
 
    
    // Recupera el numero de nodos del grafo
@@ -195,7 +215,7 @@ nNodo = 0;
 	return nNodo;
    }
    
-   public String toString() {
+   /*public String toString() {
 	
 	   String s = "";
 	   if (lista.vacia()) return s;
@@ -215,11 +235,11 @@ nNodo = 0;
 	   }
 	   return s;
 	 
-   }
+   } */
     
    
-    public Lista getLista() {
-        return lista;
+    public ArrayList getLista() {
+        return users;
     }
 
     public int getnNodo() {
