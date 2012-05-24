@@ -6,7 +6,7 @@
 package usm.simulacion.twitter.simulator;
 import usm.simulacion.twitter.simulator.ListaSimpleEnlazada.ListaUtil;
 import usm.simulacion.twitter.simulator.ListaSimpleEnlazada.Lista;
-
+import java.util.ArrayList;
 
 
 /**
@@ -15,7 +15,7 @@ import usm.simulacion.twitter.simulator.ListaSimpleEnlazada.Lista;
  */
 public class Grafo {
 
-    
+   private ArrayList<User> users;  // lista de usuarios
    private Lista lista; // lista de Nodos
    private int nNodo;   // contador de cantidad de Nodos
 
@@ -52,13 +52,13 @@ public class Grafo {
 
    class Enlace {
 	Nodo nodo;
-	double peso;
+	//double peso;
 	public Enlace(Object elemento, double peso) {
 	   			
 	  	Object p = ListaUtil.buscar(lista,new Nodo(elemento));
 	    	if (p==null) return;
 	    	nodo = (Nodo)lista.recupera(p);
-	    	this.peso = peso;
+	    	//this.peso = peso;
 	    
 }
        public Enlace(Object elemento) {
@@ -75,9 +75,9 @@ public class Grafo {
     	   if (!(nodo.equals(e.nodo))) return false;
     	   return true;
    	}
-  	public String toString() {
-    	   return nodo+"("+peso+")";
-  	}
+  	//public String toString() {
+    	//   return nodo+"("+peso+")";
+  	//}
    }
 	
    // Contruye un nuevo grafo
@@ -96,14 +96,14 @@ nNodo = 0;
    }
    // Inserta un enlace entre los nodos con elemento1 
    // y elemento2 con el peso dado
-   public void insertaEnlace(Object elemento1, Object elemento2, double peso){
+   public void insertaEnlace(Object elemento1, Object elemento2){
     	
 	   Object p = ListaUtil.buscar(lista,new Nodo(elemento1));
 	   if (p==null) return;
 	   Nodo n = (Nodo)lista.recupera(p);
 	   Lista l=n.listaEnlaces;
 	   Object q = ListaUtil.buscar(l,new Enlace(elemento2));
-	   if (q==null) l.inserta(l.fin(),new Enlace(elemento2,peso));
+	   if (q==null) l.inserta(l.fin(),new Enlace(elemento2));
 	 
    }
    // Devuelve un booleano que indica si el grafo es vacio
@@ -189,23 +189,7 @@ nNodo = 0;
 	 
    }
 
-   // Recupera el peso del enlace entre nodo1 y nodo2
-   public double recuperaPeso(Object elemento1, Object elemento2) {
-    	
-	   Object p = ListaUtil.buscar(lista,new Nodo(elemento1));
-	   if (p==null) return Double.MAX_VALUE;
-	   Nodo nodo1 = (Nodo)lista.recupera(p);
-	   p = ListaUtil.buscar(lista,new Nodo(elemento2));
-	   if (p==null) return Double.MAX_VALUE;;
-	   Nodo nodo2 = (Nodo)lista.recupera(p);
-	   if (nodo1.equals(nodo2)) return 0.0;
-	   Lista le = nodo1.listaEnlaces;
-	   p = ListaUtil.buscar(le,new Enlace(nodo2.elemento));
-	   if (p==null) return Double.MAX_VALUE;;
-	   Enlace e = (Enlace)le.recupera(p);
-	   return e.peso;
-	
-   }
+   
    // Recupera el numero de nodos del grafo
    public int nNodos() {
 	return nNodo;

@@ -177,7 +177,7 @@ public class NetworkManager{
             // inserta un usuario en un nodo de la red
             Red.insertaNodo(user, user.getId());
             
-       System.out.println("se a añadido un nuevo usuario al grafo: "+user.getName());
+      // System.out.println("se a añadido un nuevo usuario al grafo: "+user.getName());
             
         }
     }
@@ -186,8 +186,8 @@ public class NetworkManager{
         if(user instanceof User && follower instanceof User){
             // el grafo tiene pesos en los enlaces, le puse el tiempo para 
             //ponerle algo no mas, en realidad puede ser cualquier numero.
-            Red.insertaEnlace( user, follower, time);
-            System.out.println("el usuario : " +user.getName() + " sigue al usuario :" +follower.getName());
+            Red.insertaEnlace( user, follower );
+            //System.out.println("el usuario : " +user.getName() + " sigue al usuario :" +follower.getName());
             
         }
         
@@ -195,8 +195,8 @@ public class NetworkManager{
     
     private void onAddFollowing(User user, User following){
         if(user instanceof User && following instanceof User){
-        Red.insertaEnlace(following, user, time);
-        System.out.println(" el usuario : " +user.getName() + " sigue al usuario: " +following.getName());
+        Red.insertaEnlace(following, user );
+        //System.out.println(" el usuario : " +user.getName() + " sigue al usuario: " +following.getName());
         }
         
         
