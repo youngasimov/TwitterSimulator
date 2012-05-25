@@ -46,8 +46,6 @@ public class EventsManager {
      */
     private void onNewTweet(NewTweetEvent event){
         
-        //aksjhkjahsdjfah
-        //olskjdlfk
         
         networkManager.generateEvent(event);
     }
