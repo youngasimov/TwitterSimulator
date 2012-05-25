@@ -32,6 +32,8 @@ public class Grafo {
         ArrayList<Nodo> listaEnlacesFollower;
         ArrayList<Nodo> listaEnlacesFollowing;
 	int id;
+        int ContFollowers;
+        int ContFollowins;
         //Lista listaEnlaces;  antiguo
 	
         
@@ -76,6 +78,7 @@ public class Grafo {
 
     class Enlace {
 	Nodo nodo;
+
 	//double peso;
         public Enlace(Object elemento) {
 	   			
@@ -135,6 +138,7 @@ public class Grafo {
            Nodo c = new Nodo(elemento2);
 	   d =(Nodo) ListaUtil.buscar(users,new Nodo(elemento1));
            d.listaEnlacesFollower.add(c);
+           d.ContFollowers++; // cuenta cantidad de followers
 	 
    }
 
@@ -144,6 +148,7 @@ public class Grafo {
            Nodo c = new Nodo(elemento2);
 	   d =(Nodo) ListaUtil.buscar(users,new Nodo(elemento1));
            d.listaEnlacesFollowing.add(c);
+           d.ContFollowins++;  // cuenta cantidad de followings
 
     }
    
