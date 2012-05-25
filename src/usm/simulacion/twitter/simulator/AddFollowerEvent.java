@@ -15,20 +15,20 @@ public class AddFollowerEvent implements Event<AddFollowerEventHandler> {
     
     public static Type<AddFollowerEventHandler> TYPE = new Type<AddFollowerEventHandler>();
     
-    private User user;
-    private User follower;
+    private int userId;
+    private int followerId;
     
-    public AddFollowerEvent(User user, User follower){
-        this.user = user;
-        this.follower = follower;
+    public AddFollowerEvent(int user, int follower){
+        this.userId = user;
+        this.followerId = follower;
     }
     
-    public User getUser(){
-        return this.user;
+    public int getUserId(){
+        return this.userId;
     }
     
-    public User getFollower(){
-        return this.follower;
+    public int getFollower(){
+        return this.followerId;
     }
     
     @Override

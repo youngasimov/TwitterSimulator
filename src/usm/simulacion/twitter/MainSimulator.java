@@ -3,6 +3,7 @@ package usm.simulacion.twitter;
 import usm.simulacion.twitter.core.EventBus;
 import usm.simulacion.twitter.core.EventStackManager;
 import usm.simulacion.twitter.core.SimulationEvent;
+import usm.simulacion.twitter.io.LectorXml;
 import usm.simulacion.twitter.io.Output;
 import usm.simulacion.twitter.simulator.AddFollowerEvent;
 import usm.simulacion.twitter.simulator.AddFollowingEvent;
@@ -29,6 +30,11 @@ public class MainSimulator {
         Output output = new Output(bus, networkManager);
         //Configuración: leer datos de entrada y asignar parametros al simulador
         //Ejemplo
+        LectorXml lector = new LectorXml();
+        lector.cargarDocumento("user.xml");
+        lector.LeerUsuarios(bus);
+        lector.leerFollowers(bus);
+        /*
         User pedro = new User(1, "pedro");
         User juan = new User(2, "juan");
         User diego = new User(3, "diego");
@@ -40,7 +46,7 @@ public class MainSimulator {
         bus.fireEvent(new AddFollowerEvent(diego, pedro));
         bus.fireEvent(new AddFollowerEvent(juan, diego));
         bus.fireEvent(new AddFollowingEvent(pedro, juan));
-        
+        */
         //Ejemplo
         networkManager.addParam("param1", 0);
         networkManager.addParam("param2", 0.1);
