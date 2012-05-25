@@ -20,7 +20,7 @@ import usm.simulacion.twitter.simulator.User;
 public class MainSimulator {
     
     public static void main(String[] args){
-        //prueba para comitssss
+        
         
         EventBus bus = new EventBus();
         EventStackManager stackManager = new EventStackManager(bus, new ComparatorBySimulationTime());
