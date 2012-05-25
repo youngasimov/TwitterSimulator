@@ -20,7 +20,7 @@ import usm.simulacion.twitter.simulator.User;
 public class MainSimulator {
     
     public static void main(String[] args){
-        
+        //Al eduardo le gusta el nepe
         
         EventBus bus = new EventBus();
         EventStackManager stackManager = new EventStackManager(bus, new ComparatorBySimulationTime());
