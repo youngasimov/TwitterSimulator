@@ -21,6 +21,7 @@ public class MainSimulator {
     
     public static void main(String[] args){
         
+        
         EventBus bus = new EventBus();
         EventStackManager stackManager = new EventStackManager(bus, new ComparatorBySimulationTime());
         NetworkManager networkManager = new NetworkManager(bus,new RandomEventGenerator());
@@ -45,7 +46,7 @@ public class MainSimulator {
         networkManager.addParam("param2", 0.1);
         networkManager.addParam("param3", "parametrox");
         
-        //Fin configuración
+        //Fin configuración 
         //inicio de simulación
         networkManager.generateInitialRandomEvents(3);
         bus.fireEvent(new SimulationEvent(SimulationEvent.START));
