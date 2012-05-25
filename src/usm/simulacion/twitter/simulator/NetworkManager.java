@@ -25,7 +25,7 @@ public class NetworkManager{
     
     private EventBus eventBus;
     private EventGeneratorAlgoritm algoritm;
-    private List users;
+    private ArrayList<User> users;
     private Map<String,String> textData;
     private Map<String,Integer> intData;
     private Map<String,Double> doubleData;
@@ -46,7 +46,7 @@ public class NetworkManager{
         return time;
     }
     
-    public List<User> getUsers(){
+    public ArrayList<User> getUsers(){
        
         return users;
     }
@@ -55,17 +55,16 @@ public class NetworkManager{
         return null;
     }
     
-    public List<User> getFollowers(User user){
+    public ArrayList getFollowers(User user){
+
         return null;
     }
     
-    public List<User> getFollowings(User user){
+    public ArrayList getFollowings(User user){
         return null;
     }
     
    
-    
-    
     
     public void generateInitialRandomEvents(int events){
         
@@ -186,7 +185,7 @@ public class NetworkManager{
         if(user instanceof User && follower instanceof User){
             // el grafo tiene pesos en los enlaces, le puse el tiempo para 
             //ponerle algo no mas, en realidad puede ser cualquier numero.
-            Red.insertaEnlace( user, follower );
+            Red.insertaEnlaceFollower( user, follower );
             //System.out.println("el usuario : " +user.getName() + " sigue al usuario :" +follower.getName());
             
         }
@@ -195,7 +194,7 @@ public class NetworkManager{
     
     private void onAddFollowing(User user, User following){
         if(user instanceof User && following instanceof User){
-        Red.insertaEnlace(following, user );
+        Red.insertaEnlaceFollowing(user, following );
         //System.out.println(" el usuario : " +user.getName() + " sigue al usuario: " +following.getName());
         }
         

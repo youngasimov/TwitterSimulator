@@ -7,6 +7,7 @@ package usm.simulacion.twitter.simulator;
 import usm.simulacion.twitter.simulator.ListaSimpleEnlazada.ListaUtil;
 import usm.simulacion.twitter.simulator.ListaSimpleEnlazada.Lista;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 /**
@@ -28,8 +29,8 @@ public class Grafo {
    class Nodo {
        
 	Object elemento;
-        ArrayList<Enlace> listaEnlacesFollower;
-        ArrayList<Enlace> listaEnlacesFollowing;
+        ArrayList<Nodo> listaEnlacesFollower;
+        ArrayList<Nodo> listaEnlacesFollowing;
 	int id;
         //Lista listaEnlaces;  antiguo
 	
@@ -42,6 +43,14 @@ public class Grafo {
            //listaEnlaces = new Lista();
 	   
 	}
+
+        public ArrayList<Nodo> getListaEnlacesFollower() {
+            return listaEnlacesFollower;
+        }
+
+        public ArrayList<Nodo> getListaEnlacesFollowing() {
+            return listaEnlacesFollowing;
+        }
 	public boolean equals(Object nodo) {
 	   if (nodo==null) return false;
 	   Nodo n = (Nodo)nodo;
@@ -65,25 +74,29 @@ public class Grafo {
 
    
 
-   class Enlace {
+    class Enlace {
 	Nodo nodo;
 	//double peso;
-	public Enlace(Object elemento) {
+        public Enlace(Object elemento) {
 	   			
-	  	Object p = ListaUtil.buscar(lista ,new Nodo(elemento));
+	  	Object p = ListaUtil.buscar(users ,new Nodo(elemento));
 	    	if (p==null) return;
-	    	nodo = (Nodo)lista.recupera(p);
+//	    	nodo = (Nodo)lista.recupera(p);
 	    	//this.peso = peso;
 	    
 }
-       public Enlace(Object elemento) {
+
+       // public Enlace(Object elemento) {
     	   			
-      	Object p = ListaUtil.buscar(users,new Nodo(elemento));
-		if (p==null) return;
-		nodo = (Nodo)users. ; //lista.recupera(p);
+      	//Object p = ListaUtil.buscar(users,new Nodo(elemento));
+		//if (p==null) return;
+		//nodo = (Nodo)users.; //lista.recupera(p);
     	    
-  	}
-  	public boolean equals(Object enlace) {
+  	
+
+
+
+   public boolean equals(Object enlace) {
     	   if (enlace==null) return false;
     	   Enlace e = (Enlace)enlace;
     	   if ((nodo==null)&&(e.nodo==null)) return true;
@@ -93,7 +106,8 @@ public class Grafo {
   	//public String toString() {
     	//   return nodo+"("+peso+")";
   	//}
-   }
+
+    }
 	
    // Contruye un nuevo grafo
    public Grafo() {
@@ -114,20 +128,29 @@ public class Grafo {
         nNodo++;
         
    }
-   // Inserta un enlace entre los nodos con elemento1 
-   // y elemento2 con el peso dado
-   public void insertaEnlace(Object elemento1, Object elemento2){
-    	
-	   Object p = ListaUtil.buscar(lista,new Nodo(elemento1));
-	   if (p==null) return;
-	   Nodo n = (Nodo)lista.recupera(p);
-	   Lista l=n.listaEnlaces;
-	   Object q = ListaUtil.buscar(l,new Enlace(elemento2));
-	   if (q==null) l.inserta(l.fin(),new Enlace(elemento2));
+   // Inserta un enlace entre los nodos con elemento1 y elemento2
+   public void insertaEnlaceFollower(Object elemento1, Object elemento2){
+
+           Nodo d = new Nodo(elemento1);
+           Nodo c = new Nodo(elemento2);
+	   d =(Nodo) ListaUtil.buscar(users,new Nodo(elemento1));
+           d.listaEnlacesFollower.add(c);
 	 
    }
+
+   public void insertaEnlaceFollowing(Object elemento1, Object elemento2){
+
+         Nodo d = new Nodo(elemento1);
+           Nodo c = new Nodo(elemento2);
+	   d =(Nodo) ListaUtil.buscar(users,new Nodo(elemento1));
+           d.listaEnlacesFollowing.add(c);
+
+    }
+   
    // Devuelve un booleano que indica si el grafo es vacio
-   public boolean esVacio() {
+   
+            
+   public  boolean esVacio(){
     	return (users.isEmpty());
    }
    // Devuelve un booleano que indica si el grafo contiene 
