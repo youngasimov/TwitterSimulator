@@ -47,7 +47,6 @@ public class EventsManager {
     private void onNewTweet(NewTweetEvent event){
         
         
-        
         networkManager.generateEvent(event);
     }
     
