@@ -20,6 +20,7 @@ import usm.simulacion.twitter.simulator.User;
 public class MainSimulator {
     
     public static void main(String[] args){
+        //prueba para comit
         
         EventBus bus = new EventBus();
         EventStackManager stackManager = new EventStackManager(bus, new ComparatorBySimulationTime());
@@ -45,7 +46,7 @@ public class MainSimulator {
         networkManager.addParam("param2", 0.1);
         networkManager.addParam("param3", "parametrox");
         
-        //Fin configuración
+        //Fin configuración 
         //inicio de simulación
         networkManager.generateInitialRandomEvents(3);
         bus.fireEvent(new SimulationEvent(SimulationEvent.START));
