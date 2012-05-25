@@ -8,6 +8,7 @@ import usm.simulacion.twitter.simulator.ListaSimpleEnlazada.ListaUtil;
 import usm.simulacion.twitter.simulator.ListaSimpleEnlazada.Lista;
 import java.util.ArrayList;
 import java.util.Iterator;
+import usm.simulacion.twitter.simulator.Grafo.Nodo;
 
 
 /**
@@ -46,14 +47,15 @@ public class Grafo {
 	   
 	}
 
-        public ArrayList<Nodo> getListaEnlacesFollower() {
-            return listaEnlacesFollower;
-        }
+       // public ArrayList<Nodo> getListaEnlacesFollower() {
+         //   return listaEnlacesFollower;
+       // }
 
-        public ArrayList<Nodo> getListaEnlacesFollowing() {
-            return listaEnlacesFollowing;
-        }
-	public boolean equals(Object nodo) {
+      //  public ArrayList<Nodo> getListaEnlacesFollowing() {
+      //      return listaEnlacesFollowing;
+       // }
+
+        public boolean equals(Object nodo) {
 	   if (nodo==null) return false;
 	   Nodo n = (Nodo)nodo;
 	   return elemento.equals(n.elemento);
@@ -117,8 +119,6 @@ public class Grafo {
     }
    
    // Devuelve un booleano que indica si el grafo es vacio
-   
-            
    public  boolean esVacio(){
     	return (users.isEmpty());
    }
@@ -172,18 +172,27 @@ public class Grafo {
 	 
    }*/
    // Devuelve la lista de nodos
-  /* public ArrayList listaNodos() {
-    	
-       ArrayList l = new ArrayList();
-    	   if (l.isEmpty()) return l;
-    	   for(Object p=lista.primero();!p.equals(lista.fin());
-                    p=lista.siguiente(p)) {
-    		Nodo n = (Nodo)lista.recupera(p);
-    		l.inserta(l.fin(),n.elemento);
-    	   }
+  public ArrayList listaNodosFollower(Object elemento) {
+      ArrayList l = new ArrayList();
+      Nodo d = new Nodo(elemento);
+      d =(Nodo) ListaUtil.buscar(users,new Nodo(elemento));
+
+      l= d.getlistaEnlacesFollower();
+      
 	   return l;
 	
-   }*/
+   }
+
+  public ArrayList listaNodosFollowing(Object elemento) {
+      ArrayList l = new ArrayList();
+      Nodo d = new Nodo(elemento);
+      d =(Nodo) ListaUtil.buscar(users,new Nodo(elemento));
+
+      l= d.getlistaEnlacesFollower();
+      
+        return l;
+
+   }
    // Devuelve la lista de elementos enlazados a un nodo
  /*  public Lista listaEnlaces(Object elemento) {
 				

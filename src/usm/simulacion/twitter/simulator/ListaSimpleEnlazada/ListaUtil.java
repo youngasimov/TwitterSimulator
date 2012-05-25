@@ -13,7 +13,7 @@ import java.util.Iterator;
     
     public class ListaUtil {
         /**
-         *
+         *Busca un elemento en la lista y lo devuelve
          * @param lista
          * @param elemento
          * @return

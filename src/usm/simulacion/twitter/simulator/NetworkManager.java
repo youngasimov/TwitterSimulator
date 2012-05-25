@@ -13,6 +13,7 @@ import usm.simulacion.twitter.core.EventBus;
 import usm.simulacion.twitter.core.FutureEventEvent;
 import usm.simulacion.twitter.core.SimulationEvent;
 import usm.simulacion.twitter.simulator.Grafo;
+import usm.simulacion.twitter.simulator.Grafo.Nodo;
 
 
 /**
@@ -45,23 +46,31 @@ public class NetworkManager{
     public long getCurrentTime(){
         return time;
     }
-    
+
+    /**
+     * lista de usuarios en la Red
+     * @return
+     */
     public ArrayList<User> getUsers(){
-       
+        users = Red.getLista();
         return users;
     }
     
     public User getUser(int id){
-        return null;
-    }
-    
-    public ArrayList getFollowers(User user){
 
         return null;
     }
     
+    public ArrayList getFollowers(User user){
+        ArrayList followers = new ArrayList();
+        Red.listaNodosFollower(user);
+        return followers;
+    }
+    
     public ArrayList getFollowings(User user){
-        return null;
+        ArrayList followings = new ArrayList();
+        Red.listaNodosFollowing(user);
+        return followings;
     }
     
    
@@ -159,6 +168,7 @@ public class NetworkManager{
             @Override
             public void addFollower(AddFollowerEvent event) {
                 onAddFollower(event.getUser(), event.getFollower());
+                onAddFollowing(event.getFollower(), event.getUser());
             }
         });
         
@@ -171,7 +181,7 @@ public class NetworkManager{
         });
     }
     
-    private void onAddUser(User user){
+    private void onAddUser(User user ){
         if(user instanceof User){
             // inserta un usuario en un nodo de la red
             Red.insertaNodo(user);
@@ -183,8 +193,7 @@ public class NetworkManager{
     
     private void onAddFollower(User user, User follower){
         if(user instanceof User && follower instanceof User){
-            // el grafo tiene pesos en los enlaces, le puse el tiempo para 
-            //ponerle algo no mas, en realidad puede ser cualquier numero.
+            
             Red.insertaEnlaceFollower( user, follower );
             //System.out.println("el usuario : " +user.getName() + " sigue al usuario :" +follower.getName());
             
