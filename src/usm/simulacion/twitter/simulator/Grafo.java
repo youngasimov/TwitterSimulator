@@ -74,43 +74,7 @@ public class Grafo {
         }
    }
 
-   
-
-    class Enlace {
-	Nodo nodo;
-
-	//double peso;
-        public Enlace(Object elemento) {
-	   			
-	  	Object p = ListaUtil.buscar(users ,new Nodo(elemento));
-	    	if (p==null) return;
-//	    	nodo = (Nodo)lista.recupera(p);
-	    	//this.peso = peso;
-	    
-}
-
-       // public Enlace(Object elemento) {
-    	   			
-      	//Object p = ListaUtil.buscar(users,new Nodo(elemento));
-		//if (p==null) return;
-		//nodo = (Nodo)users.; //lista.recupera(p);
-    	    
-  	
-
-
-
-   public boolean equals(Object enlace) {
-    	   if (enlace==null) return false;
-    	   Enlace e = (Enlace)enlace;
-    	   if ((nodo==null)&&(e.nodo==null)) return true;
-    	   if (!(nodo.equals(e.nodo))) return false;
-    	   return true;
-   	}
-  	//public String toString() {
-    	//   return nodo+"("+peso+")";
-  	//}
-
-    }
+  
 	
    // Contruye un nuevo grafo
    public Grafo() {
