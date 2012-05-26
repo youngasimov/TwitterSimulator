@@ -11,8 +11,7 @@ import java.util.Map;
 import usm.simulacion.twitter.core.Event;
 import usm.simulacion.twitter.core.EventBus;
 import usm.simulacion.twitter.core.FutureEventEvent;
-import usm.simulacion.twitter.core.SimulationEvent;
-import usm.simulacion.twitter.simulator.Grafo;
+//import usm.simulacion.twitter.core.SimulationEvent;
 
 
 /**
@@ -23,45 +22,68 @@ import usm.simulacion.twitter.simulator.Grafo;
  */
 public class NetworkManager{
     
+    private class LocalNetwork{
+        
+        public List<User> followers;
+        public List<User> followings;
+        
+        public LocalNetwork(){
+            followers = new ArrayList<User>();
+            followings = new ArrayList<User>();
+        }
+    }
+    
     private EventBus eventBus;
     private EventGeneratorAlgoritm algoritm;
-    private ArrayList<User> users;
     private Map<String,String> textData;
     private Map<String,Integer> intData;
     private Map<String,Double> doubleData;
-    private long time;
-    private int nUsers;
-    Grafo Red = new Grafo();  // se crea el grafo que contendra la red.
+    private Map<User,LocalNetwork> red;
+    private Double time;
+    //private int nUsers;
+    //Grafo Red = new Grafo();  // se crea el grafo que contendra la red.
     
     
     public NetworkManager(EventBus eventBus,EventGeneratorAlgoritm algoritm){
         this.eventBus = eventBus;
         this.algoritm = algoritm;
         this.algoritm.setNetworkManager(this);
-        users = new ArrayList<User>();
+        red = new HashMap<User,LocalNetwork>();
+        time = 0.0;
         bind();
     }
     
-    public long getCurrentTime(){
+    public Double getCurrentTime(){
         return time;
     }
     
     public ArrayList<User> getUsers(){
-       
-        return users;
+        return new ArrayList<User>(red.keySet());
     }
     
     public User getUser(int id){
+        Integer idUser = new Integer(id);
+        if(red.keySet().contains(idUser)){
+            List<User> aux = new ArrayList<User>(red.keySet());
+            return aux.get(aux.indexOf(idUser));
+        }
         return null;
     }
     
-    public ArrayList getFollowers(User user){
-
-        return null;
+    public List<User> getFollowers(User user){
+        if(!red.containsKey(user)){
+            return new ArrayList<User>();
+        }else{
+            return red.get(user).followers;
+        }
     }
     
-    public ArrayList getFollowings(User user){
-        return null;
+    public List<User> getFollowings(User user){
+        if(!red.containsKey(user)){
+            return new ArrayList<User>();
+        }else{
+            return red.get(user).followings;
+        }
     }
     
    
@@ -72,18 +94,14 @@ public class NetworkManager{
         Event e;
         for(int i=0;i<events;i++){
             e = algoritm.generateEvent(null);
-            eventBus.fireEvent(new FutureEventEvent(time,algoritm.getDeltaTime(),e));
+            eventBus.fireEvent(new FutureEventEvent(algoritm.getDeltaTime(),time,e));
         }
 
     }
     
     public void generateEvent(Event procesedEvent){
-        //ejemplo
         Event e = algoritm.generateEvent(procesedEvent);
         eventBus.fireEvent(new FutureEventEvent(time,algoritm.getDeltaTime(),e));
-        if(time > 20){
-            eventBus.fireEvent(new SimulationEvent(SimulationEvent.FINISH));
-        }
     }
     
     public void addParam(String var,String value){
@@ -131,17 +149,12 @@ public class NetworkManager{
         }
     }
     
-     public int getnUsers() {
-        nUsers = Red.getnNodo();
-        System.out.println("El Numero de Usuarios en la Red es :" + Red.getnNodo());
-        return nUsers;
-    } 
     
     private void bind(){
         eventBus.registerEventHandler(TimeEvent.TYPE, new TimeEventHandler() {
 
             @Override
-            public void updateTime(long currentTime) {
+            public void updateTime(Double currentTime) {
                 time = currentTime;
             }
         });
@@ -158,7 +171,7 @@ public class NetworkManager{
 
             @Override
             public void addFollower(AddFollowerEvent event) {
-                onAddFollower(event.getUser(), event.getFollower());
+                onAddFollower(event.getUserId(), event.getFollowerId());
             }
         });
         
@@ -166,37 +179,57 @@ public class NetworkManager{
 
             @Override
             public void addFollowing(AddFollowingEvent event) {
-                onAddFollowing(event.getUser(), event.getFollowing());
+                onAddFollowing(event.getUserId(), event.getFollowingId());
             }
         });
     }
     
     private void onAddUser(User user){
-        if(user instanceof User){
+        red.put(user, new LocalNetwork());
+        //if(user instanceof User){
             // inserta un usuario en un nodo de la red
-            Red.insertaNodo(user);
+            //Red.insertaNodo(user);
             
       // System.out.println("se a añadido un nuevo usuario al grafo: "+user.getName());
-            
-        }
+        //}
     }
     
-    private void onAddFollower(User user, User follower){
-        if(user instanceof User && follower instanceof User){
+    private void onAddFollower(int user, int follower){
+        List<User> users = new ArrayList<User>(red.keySet());
+        User aux = new User(user, null);
+        User aux2 = new User(follower, null);
+        User u = users.get(users.indexOf(aux));
+        User f = users.get(users.indexOf(aux2));
+        
+        red.get(u).followers.add(f);
+        red.get(f).followings.add(u);
+
+
+        //if(user instanceof User && follower instanceof User){
             // el grafo tiene pesos en los enlaces, le puse el tiempo para 
             //ponerle algo no mas, en realidad puede ser cualquier numero.
-            Red.insertaEnlaceFollower( user, follower );
+          //  Red.insertaEnlaceFollower( user, follower );
             //System.out.println("el usuario : " +user.getName() + " sigue al usuario :" +follower.getName());
             
-        }
+       // }
         
     }
     
-    private void onAddFollowing(User user, User following){
-        if(user instanceof User && following instanceof User){
-        Red.insertaEnlaceFollowing(user, following );
+    private void onAddFollowing(int user, int following){
+        
+        List<User> users = new ArrayList<User>(red.keySet());
+        User aux = new User(user, null);
+        User aux2 = new User(following, null);
+        User u = users.get(users.indexOf(aux));
+        User f = users.get(users.indexOf(aux2));
+        
+        red.get(u).followings.add(f);
+        red.get(f).followers.add(u);
+        
+        //if(user instanceof User && following instanceof User){
+        //Red.insertaEnlaceFollowing(user, following );
         //System.out.println(" el usuario : " +user.getName() + " sigue al usuario: " +following.getName());
-        }
+        //}
         
         
     }

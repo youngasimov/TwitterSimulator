@@ -6,7 +6,6 @@ import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.*;
 import usm.simulacion.twitter.core.EventBus;
 import usm.simulacion.twitter.simulator.AddFollowerEvent;
-import usm.simulacion.twitter.simulator.AddFollowingEvent;
 import usm.simulacion.twitter.simulator.AddUserEvent;
 import usm.simulacion.twitter.simulator.User;
 
@@ -28,7 +27,7 @@ public class LectorXml {
     }
 
     public void LeerUsuarios(EventBus bus){
-        NodeList listaPersonas = e.getElementsByTagName("user");
+        NodeList listaPersonas = e.getElementsByTagName("User");
         for (int i = 0; i < listaPersonas.getLength(); i ++) {
 
             Element persona = (Element)listaPersonas.item(i);

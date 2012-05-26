@@ -4,8 +4,8 @@
  */
 
 package usm.simulacion.twitter.simulator;
-import usm.simulacion.twitter.simulator.ListaSimpleEnlazada.ListaUtil;
-import usm.simulacion.twitter.simulator.ListaSimpleEnlazada.Lista;
+//import usm.simulacion.twitter.simulator.ListaSimpleEnlazada.ListaUtil;
+//import usm.simulacion.twitter.simulator.ListaSimpleEnlazada.Lista;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -96,7 +96,7 @@ public class Grafo {
         
    }
    // Inserta un enlace entre los nodos con elemento1 y elemento2
-   public void insertaEnlaceFollower(Object elemento1, Object elemento2){
+   /*public void insertaEnlaceFollower(Object elemento1, Object elemento2){
 
            Nodo d = new Nodo(elemento1);
            Nodo c = new Nodo(elemento2);

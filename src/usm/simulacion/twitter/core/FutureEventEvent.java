@@ -13,20 +13,20 @@ public class FutureEventEvent implements Event<FutureEventEventHandler> {
     public static Type<FutureEventEventHandler> TYPE = new Type<FutureEventEventHandler>();
     
     private Event futureEvent;
-    private long deltaTime;
-    private long currentTime;
+    private Double deltaTime;
+    private Double currentTime;
     
-    public FutureEventEvent(long deltaTime,long currentTime, Event event){
+    public FutureEventEvent(Double deltaTime,Double currentTime, Event event){
         this.futureEvent = event;
         this.deltaTime = deltaTime;
         this.currentTime = currentTime;
     }
 
-    public long getCurrentTime() {
+    public Double getCurrentTime() {
         return currentTime;
     }
 
-    public long getDeltaTime() {
+    public Double getDeltaTime() {
         return deltaTime;
     }
 

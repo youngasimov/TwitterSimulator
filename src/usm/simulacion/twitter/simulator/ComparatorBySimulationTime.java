@@ -15,8 +15,8 @@ public class ComparatorBySimulationTime implements Comparator<FutureEventEvent> 
 
     @Override
     public int compare(FutureEventEvent t1, FutureEventEvent t2) {
-        Long time1 = new Long(t1.getCurrentTime()+t1.getDeltaTime());
-        Long time2 = new Long(t2.getCurrentTime()+t2.getDeltaTime());
+        Double time1 = new Double(t1.getCurrentTime()+t1.getDeltaTime());
+        Double time2 = new Double(t2.getCurrentTime()+t2.getDeltaTime());
         return time1.compareTo(time2);
     }
 

@@ -14,6 +14,6 @@ public interface EventGeneratorAlgoritm {
     
     public void setNetworkManager(NetworkManager network);
     public Event generateEvent(Event procecedEvent);
-    public long getDeltaTime();
+    public Double getDeltaTime();
     
 }

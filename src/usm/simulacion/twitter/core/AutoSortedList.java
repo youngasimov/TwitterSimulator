@@ -22,26 +22,40 @@ public class AutoSortedList<H extends FutureEventEvent> extends ArrayList<H>{
 
     @Override
     public boolean add(H e) {
-        
-        for(int i = this.size()-1;i>=0;i++){
-            int c = comparator.compare(this.get(i), e);
-            if(c==1){
-                this.add(i, e);
-                return true;
+        if(this.size()==0){
+            super.add(e);
+        }else{
+            for(int i = this.size()-1;i>=0;i--){
+                H h = this.get(i);
+                int c = comparator.compare(h, e);
+                if(c==-1){
+                    if(i == this.size()-1){
+                        super.add(e);
+                        return true;
+                    }else{
+                        this.add(i+1, e);
+                        return true;
+                    }
+                }else if(c == 0){
+                    return false;
+                }
             }
-            if(c == 0){
-                return false;
-            }
+            super.add(0,e);
         }
-        
         return true;
     }
     
     public H first(){
+        if(this.isEmpty()){
+            return null;
+        }
         return this.get(0);
     }
     
     public H pollFirst(){
+        if(this.isEmpty()){
+            return null;
+        }
         return this.remove(0);
     }
     

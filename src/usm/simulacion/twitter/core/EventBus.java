@@ -34,8 +34,6 @@ public class EventBus {
     public Registrator registerEventHandler(Type t,EventHandler handler){   
         if(handlers.containsKey(t)){
             handlers.get(t).add(handler);
-            List aux = handlers.get(t);
-            aux.add(handler);
         }else{
             List<EventHandler> handlerList = new ArrayList<EventHandler>();
             handlerList.add(handler);

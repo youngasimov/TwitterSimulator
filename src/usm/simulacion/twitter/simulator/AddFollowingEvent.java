@@ -15,19 +15,19 @@ public class AddFollowingEvent implements Event<AddFollowingEventHandler> {
     
     public static Type<AddFollowingEventHandler> TYPE = new Type<AddFollowingEventHandler>();
 
-    private User user;
-    private User following;
+    private int user;
+    private int following;
     
-    public AddFollowingEvent(User user, User following){
+    public AddFollowingEvent(int user, int following){
         this.user = user;
         this.following = following;
     }
     
-    public User getUser(){
+    public int getUserId(){
         return this.user;
     }
     
-    public User getFollowing(){
+    public int getFollowingId(){
         return this.following;
     }
     

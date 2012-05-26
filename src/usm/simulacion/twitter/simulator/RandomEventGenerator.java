@@ -14,15 +14,11 @@ import usm.simulacion.twitter.core.Event;
 public class RandomEventGenerator implements EventGeneratorAlgoritm{
     
     private NetworkManager network;
-    private long deltaTime;
+    private int tweetsIds = 0;
 
     @Override
-    public long getDeltaTime() {
-        if(Math.random()>0.5){
-            return 2;
-        }else{
-            return 1;
-        }
+    public Double getDeltaTime() {
+        return Math.random()*3;
     }
 
     @Override
@@ -32,9 +28,31 @@ public class RandomEventGenerator implements EventGeneratorAlgoritm{
 
     @Override
     public Event generateEvent(Event procecedEvent) {
-        List<User> users = network.getUsers();
-        User user = users.get(Math.round((float)(Math.random()*(users.size()-1))));
-        return new NewTweetEvent(user, new Tweet(Math.round((float)(Math.random()*4 + Math.random()*73 + Math.random()*306 + Math.random()*1234))));
+        Tweet t;
+        if(Math.random()>0.6){
+            List<User> users = network.getUsers();
+            User user = users.get(Math.round((float)(Math.random()*(users.size()-1))));
+            //t = new Tweet(Math.round((float)(Math.random()*4 + Math.random()*73 + Math.random()*306 + Math.random()*1234)));
+            t = new Tweet(tweetsIds);
+            tweetsIds++;
+            t.setMessage("generico");
+            t.setOwner(user);
+            return new NewTweetEvent(user, t);
+        }else{
+            List<User> users = network.getUsers();
+            User user = users.get(Math.round((float)(Math.random()*(users.size()-1))));
+            if(user.getIncomingTweets().size()==0){
+                //t = new Tweet(Math.round((float)(Math.random()*4 + Math.random()*73 + Math.random()*306 + Math.random()*1234)));
+                t = new Tweet(tweetsIds);
+                tweetsIds++;
+                t.setMessage("generico");
+                t.setOwner(user);
+                return new NewTweetEvent(user, t);
+            }else{
+                t = user.getIncomingTweets().get((int)(Math.floor(Math.random()*user.getIncomingTweets().size())));
+                return new NewReTweetEvent(user, t);
+            }
+        }
     }
     
 }

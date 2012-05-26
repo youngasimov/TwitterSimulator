@@ -4,6 +4,11 @@
  */
 package usm.simulacion.twitter.io;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import usm.simulacion.twitter.core.EventBus;
 import usm.simulacion.twitter.core.SimulationEvent;
 import usm.simulacion.twitter.core.SimulationEventHandler;
@@ -14,6 +19,8 @@ import usm.simulacion.twitter.simulator.NewReTweetEvent;
 import usm.simulacion.twitter.simulator.NewReTweetEventHandler;
 import usm.simulacion.twitter.simulator.NewTweetEvent;
 import usm.simulacion.twitter.simulator.NewTweetEventHandler;
+import usm.simulacion.twitter.simulator.Tweet;
+import usm.simulacion.twitter.simulator.User;
 
 /**
  *
@@ -23,10 +30,16 @@ public class Output {
     
     private EventBus eventBus;
     private NetworkManager networkManager;
+    private boolean finalizo;
+    private long tweetCounter;
+    private long reTweetCounter;
     
     public Output(EventBus eventBus,NetworkManager networkManager){
         this.eventBus = eventBus;
         this.networkManager = networkManager;
+        finalizo = false;
+        tweetCounter = 0;
+        reTweetCounter = 0;
         bind();
     }
     
@@ -39,7 +52,9 @@ public class Output {
 
             @Override
             public void addUser(AddUserEvent event) {
-                System.out.println(getTime()+"se a añadido un nuevo usuario: "+event.getUser().getName());
+                if(!finalizo){
+                    System.out.println(getTime()+"se a añadido un nuevo usuario: "+event.getUser().getName());
+                }
             }
         });
         
@@ -47,7 +62,10 @@ public class Output {
 
             @Override
             public void onNewTweet(NewTweetEvent event) {
-                System.out.println(getTime()+"el usuario: "+event.getUser().getName()+" a generado un nuevo tweet con id: "+event.getTweet().getId());
+                if(!finalizo){
+                    tweetCounter++;
+                    System.out.println(tweetCounter+") "+getTime()+"el usuario: "+event.getUser().getName()+" a generado un nuevo tweet con id: "+event.getTweet().getId());
+                }
             }
         });
         
@@ -55,7 +73,10 @@ public class Output {
 
             @Override
             public void onReTweet(NewReTweetEvent event) {
-                System.out.println(getTime()+"el usuario: "+event.getUser().getName()+" a retuitiado un tweet con id: "+event.getTweet().getId()+" cuyo autor original es: "+event.getTweet().getOwner());
+                if(!finalizo){
+                    reTweetCounter++;
+                    System.out.println(reTweetCounter+") "+getTime()+"el usuario: "+event.getUser().getName()+" a retuitiado un tweet con id: "+event.getTweet().getId()+" cuyo autor original es: "+event.getTweet().getOwner().getName());
+                }
             }
         });
         
@@ -64,10 +85,41 @@ public class Output {
             @Override
             public void onSimulationEvent(SimulationEvent event) {
                 if(event.getState() == SimulationEvent.FINISH){
-                    System.out.println(getTime()+"El simulador ha finalizado");
+                    finalizo = true;
+                    generateReport();
                 }
             }
         });
     }
     
+    
+    private void generateReport(){
+        System.out.println();
+        System.out.println();
+        System.out.println("===============REPORTE===================");
+        System.out.println();
+        System.out.println("tweets nuevos generados: "+tweetCounter);
+        System.out.println("reTweets generados: "+reTweetCounter);
+        System.out.println("tweets totales: "+(tweetCounter+reTweetCounter));
+        List<User> users = networkManager.getUsers();
+        System.out.println("tweets promedio por usuario: "+((tweetCounter+reTweetCounter)/users.size()));
+        System.out.println("tweets promedio por usuario por unidad de tiempo: "+((tweetCounter+reTweetCounter)/users.size())/networkManager.getCurrentTime());
+        
+        Map<Integer,Integer> counters = new HashMap<Integer, Integer>();
+        for(User user:users){
+            for(Tweet tweet:user.getIncomingTweets()){
+                if(counters.containsKey(tweet.getSteps())){
+                    counters.put(tweet.getSteps(),counters.get(tweet.getSteps())+1);
+                }else{
+                    counters.put(tweet.getSteps(),1);
+                }
+            }
+        }
+        System.out.println("--------Histograma------------");
+        List<Integer> keys = new ArrayList<Integer>(counters.keySet());
+        Collections.sort(keys);
+        for(Integer key:keys){
+            System.out.println(key+" saltos --------> "+counters.get(key));
+        }
+    }   
 }

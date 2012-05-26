@@ -58,9 +58,10 @@ public class EventStackManager {
             FutureEventEvent e = nextEvent();
             if(e == null){
                 eventBus.fireEvent(new SimulationEvent(SimulationEvent.FINISH));
+            }else{
+                eventBus.fireEvent(new TimeEvent(e.getCurrentTime()+e.getDeltaTime()));
+                eventBus.fireEvent(e.getFutureEvent());
             }
-            eventBus.fireEvent(new TimeEvent(e.getCurrentTime()+e.getDeltaTime()));
-            eventBus.fireEvent(e.getFutureEvent());
         }
         
     }
@@ -70,23 +71,15 @@ public class EventStackManager {
     }
     
     private FutureEventEvent nextEvent(){
-        Iterator<AutoSortedList<FutureEventEvent>> lista = eventStack.values().iterator();
-        AutoSortedList<FutureEventEvent> nextEventList = null;
-        AutoSortedList<FutureEventEvent> currentEventList;
-        FutureEventEvent futureEvent = null;
-        FutureEventEvent current;
-        while(lista.hasNext()){
-            currentEventList = lista.next();
-            current = currentEventList.first();
-            if(futureEvent == null || (futureEvent.getCurrentTime()+futureEvent.getDeltaTime())<(current.getCurrentTime()+current.getDeltaTime())){
-                nextEventList = currentEventList;
-                futureEvent = nextEventList.first();
+        Iterator<AutoSortedList<FutureEventEvent>> listas = eventStack.values().iterator();
+        AutoSortedList<FutureEventEvent> primeros = new AutoSortedList<FutureEventEvent>(comparator);
+        while(listas.hasNext()){
+            AutoSortedList<FutureEventEvent> lista = listas.next();
+            if(!lista.isEmpty()){
+                primeros.add(lista.first());
             }
         }
-        if(nextEventList != null){
-            return nextEventList.pollFirst();
-        }else{
-            return null;
-        }
+        FutureEventEvent selectedEvent = primeros.first();
+        return eventStack.get(selectedEvent.getFutureEvent().getType()).pollFirst();
     }
 }

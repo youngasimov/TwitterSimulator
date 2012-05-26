@@ -11,5 +11,5 @@ import usm.simulacion.twitter.core.EventHandler;
  * @author camilovera
  */
 public interface TimeEventHandler extends EventHandler {
-    public void updateTime(long currentTime);
+    public void updateTime(Double currentTime);
 }

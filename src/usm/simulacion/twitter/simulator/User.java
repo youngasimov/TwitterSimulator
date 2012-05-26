@@ -4,6 +4,7 @@
  */
 package usm.simulacion.twitter.simulator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,6 +22,8 @@ public class User implements HasIncomingTweets, HasOwnTweets{
     public User(int id, String name){
         this.id = id;
         this.name = name;
+        incomingTweets = new ArrayList<Tweet>();
+        ownTweets = new ArrayList<Tweet>();
     }
     
     public String getName(){
@@ -88,8 +91,16 @@ public class User implements HasIncomingTweets, HasOwnTweets{
     public boolean equals(Object o) {
         if(o instanceof User && ((User)o).getId() == this.id){
             return true;
-        }else{
+        }else if(o instanceof Integer && ((Integer)o) == this.id){
+            return true;
+        }
+        else{
             return false;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }

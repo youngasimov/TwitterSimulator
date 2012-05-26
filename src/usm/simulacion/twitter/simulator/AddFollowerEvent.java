@@ -27,7 +27,7 @@ public class AddFollowerEvent implements Event<AddFollowerEventHandler> {
         return this.userId;
     }
     
-    public int getFollower(){
+    public int getFollowerId(){
         return this.followerId;
     }
     

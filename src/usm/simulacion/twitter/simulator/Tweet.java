@@ -13,6 +13,7 @@ public class Tweet{
     private String messagee;
     private int id;
     private int steps;
+    private double timeSignature;
     private User owner;
     
     public Tweet(int id){
@@ -23,7 +24,15 @@ public class Tweet{
         return id;
     }
 
-    public void setMessagee(String messagee) {
+    public double getTimeSignature() {
+        return timeSignature;
+    }
+
+    public void setTimeSignature(double timeSignature) {
+        this.timeSignature = timeSignature;
+    }
+
+    public void setMessage(String messagee) {
         this.messagee = messagee;
     }
 

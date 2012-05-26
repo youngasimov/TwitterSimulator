@@ -15,9 +15,9 @@ public class TimeEvent implements Event<TimeEventHandler> {
 
     public static Type<TimeEventHandler> TYPE = new Type<TimeEventHandler>();
     
-    private Long currentTime;
+    private Double currentTime;
     
-    public TimeEvent(Long currentTime){
+    public TimeEvent(Double currentTime){
         this.currentTime = currentTime;
     }
     
