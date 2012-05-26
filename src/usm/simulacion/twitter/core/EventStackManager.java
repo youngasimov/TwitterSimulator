@@ -1,7 +1,9 @@
 package usm.simulacion.twitter.core;
 
 import java.util.Comparator;
-import java.util.TreeSet;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import usm.simulacion.twitter.simulator.TimeEvent;
 
 /**
@@ -12,14 +14,16 @@ public class EventStackManager {
     
     
     private EventBus eventBus;
-    private TreeSet<FutureEventEvent> eventStack;
+    private Map<Type,AutoSortedList<FutureEventEvent>> eventStack;
+    private Comparator<FutureEventEvent> comparator;
     private boolean working;
     
     
     
-    public EventStackManager(EventBus eventBus, Comparator comparator){
+    public EventStackManager(EventBus eventBus, Comparator<FutureEventEvent> comparator){
         this.eventBus = eventBus;
-        eventStack = new TreeSet<FutureEventEvent>(comparator);
+        eventStack = new HashMap<Type,AutoSortedList<FutureEventEvent>>();
+        this.comparator = comparator;
         working = false;
         bind();
     }
@@ -29,7 +33,10 @@ public class EventStackManager {
 
             @Override
             public void onFutureEvent(FutureEventEvent event) {
-                eventStack.add(event);
+                if(!eventStack.containsKey(event.getFutureEvent().getType())){
+                    eventStack.put(event.getFutureEvent().getType(), new AutoSortedList<FutureEventEvent>(comparator));
+                }
+                eventStack.get(event.getFutureEvent().getType()).add(event);
             }
         });
         eventBus.registerEventHandler(SimulationEvent.TYPE, new SimulationEventHandler() {
@@ -63,6 +70,23 @@ public class EventStackManager {
     }
     
     private FutureEventEvent nextEvent(){
-        return eventStack.pollFirst();
+        Iterator<AutoSortedList<FutureEventEvent>> lista = eventStack.values().iterator();
+        AutoSortedList<FutureEventEvent> nextEventList = null;
+        AutoSortedList<FutureEventEvent> currentEventList;
+        FutureEventEvent futureEvent = null;
+        FutureEventEvent current;
+        while(lista.hasNext()){
+            currentEventList = lista.next();
+            current = currentEventList.first();
+            if(futureEvent == null || (futureEvent.getCurrentTime()+futureEvent.getDeltaTime())<(current.getCurrentTime()+current.getDeltaTime())){
+                nextEventList = currentEventList;
+                futureEvent = nextEventList.first();
+            }
+        }
+        if(nextEventList != null){
+            return nextEventList.pollFirst();
+        }else{
+            return null;
+        }
     }
 }

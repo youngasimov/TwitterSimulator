@@ -8,7 +8,7 @@ package usm.simulacion.twitter.core;
  *
  * @author camilovera
  */
-public class FutureEventEvent implements Event<FutureEventEventHandler>/*,Comparable<FutureEventEvent>*/ {
+public class FutureEventEvent implements Event<FutureEventEventHandler> {
 
     public static Type<FutureEventEventHandler> TYPE = new Type<FutureEventEventHandler>();
     
@@ -42,41 +42,5 @@ public class FutureEventEvent implements Event<FutureEventEventHandler>/*,Compar
     @Override
     public void dispach(FutureEventEventHandler eventHandler) {
         eventHandler.onFutureEvent(this);
-    }
-
-    /*
-    
-    @Override
-    public int compareTo(FutureEventEvent t) {
-        Long timeObject = new Long(t.getCurrentTime()+t.getDeltaTime());
-        Long timeThis = new Long(this.getCurrentTime()+this.getDeltaTime());
-        return timeThis.compareTo(timeObject);
-    }
-
-    @Override
-    public int hashCode() {
-        return (int)(this.getCurrentTime()+this.getDeltaTime());
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final FutureEventEvent other = (FutureEventEvent) obj;
-        if (this.futureEvent != other.futureEvent && (this.futureEvent == null || !this.futureEvent.equals(other.futureEvent))) {
-            return false;
-        }
-        if (this.deltaTime != other.deltaTime) {
-            return false;
-        }
-        if (this.currentTime != other.currentTime) {
-            return false;
-        }
-        return true;
-    }*/
-    
+    }    
 }
