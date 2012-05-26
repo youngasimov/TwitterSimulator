@@ -6,20 +6,15 @@ package usm.simulacion.twitter.simulator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import usm.simulacion.twitter.core.Event;
 import usm.simulacion.twitter.core.EventBus;
 import usm.simulacion.twitter.core.FutureEventEvent;
 import usm.simulacion.twitter.core.SimulationEvent;
-import usm.simulacion.twitter.simulator.Grafo;
-import usm.simulacion.twitter.simulator.Grafo.Nodo;
 
 
 /**
- * Esta clase contiene la información de toda la red,
- * ademas de determinar cuando una persona genera un nuevo
- * tweet o re-tweet
+ * Esta clase contiene la información de toda la red.
  * @author camilovera
  */
 public class NetworkManager{
