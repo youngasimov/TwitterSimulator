@@ -87,10 +87,10 @@ public class Grafo {
 
    }
    // Inserta un nuevo nodo en el grafo con el elemento dado
-   public void insertaNodo(Object elemento3) {
+   public void insertaNodo(Object elemento3, int idUser) {
     	//if (contieneNodo(elemento3)) return;
     	Nodo nodo = new Nodo(elemento3);
-
+        nodo.id = idUser;
         users.add(nodo);
          //lista.inserta(lista.fin(),nodo);
         //nodo.id = id;
@@ -107,6 +107,8 @@ public class Grafo {
            d.ContFollowers++; // cuenta cantidad de followers
 	 
    }
+
+
 
    public void insertaEnlaceFollowing(Object elemento1, Object elemento2){
 
@@ -143,34 +145,7 @@ public class Grafo {
 	   return true;
 	
    }
-   // Borra el nodo con el elemento dado
-  /* public void borraNodo(Object elemento) {
-    	
-	   Object p = ListaUtil.buscar(lista,new Nodo(elemento));
-	   if (p==null) return;
-	   lista.suprime(p);
-	   nNodo--;
-	   if (lista.vacia()) return;					
-   for(p=lista.primero();!p.equals(lista.fin());
-       p=lista.siguiente(p)) {
-		Nodo n = (Nodo)lista.recupera(p);
-		Lista l=n.listaEnlaces;
-		Object q = ListaUtil.buscar(l,new Enlace(elemento));
-		if (q!=null) l.suprime(q);
-	   }
-	
-   } */
-   // Bora el enlace entre los nodos con elemento1 y elemento2
-   /*public void borraEnlace(Object elemento1, Object elemento2) {
-    	
-	   Object p = ListaUtil.buscar(lista,new Nodo(elemento1));
-	   if (p==null) return;
-	   Nodo n = (Nodo)lista.recupera(p);
-	   Lista l=n.listaEnlaces;
-	   Object q = ListaUtil.buscar(l,new Enlace(elemento2));
-	   if (q!=null) l.suprime(q);
-	 
-   }*/
+  
    // Devuelve la lista de nodos
   public ArrayList listaNodosFollower(Object elemento) {
       ArrayList l = new ArrayList();
@@ -193,51 +168,19 @@ public class Grafo {
         return l;
 
    }
-   // Devuelve la lista de elementos enlazados a un nodo
- /*  public Lista listaEnlaces(Object elemento) {
-				
-	   Object p = ListaUtil.buscar(lista,new Nodo(elemento));
-	   if (p==null) return null;
-	   Nodo n = (Nodo)lista.recupera(p);
-	   Lista le = n.listaEnlaces;
-	   Lista l = new Lista();
-    	   if (le.vacia()) return l;
-    	   for(p=le.primero();!p.equals(le.fin());p=le.siguiente(p)) {
-    	      Enlace e = (Enlace)le.recupera(p);
-    		l.inserta(l.fin(),e.nodo.elemento);
-    	   }
-	   return l;
-	 
-   }*/
+  
+   public Object buscarConId(ArrayList lista, int userId) {
+        //Iterator iterador = lista.listIterator();
+       
+       for ( Iterator iterador = lista.listIterator(); iterador.hasNext(); ){
+                Nodo b = (Nodo) iterador.next();
 
-   
-   // Recupera el numero de nodos del grafo
-   public int nNodos() {
-	return nNodo;
-   }
-   
-   /*public String toString() {
-	
-	   String s = "";
-	   if (lista.vacia()) return s;
-	   for(Object p=lista.primero();!p.equals(lista.fin());
-                    p=lista.siguiente(p)) {
-		Nodo n = (Nodo)lista.recupera(p);
-		s += "Nodo "+n+": ";
-		Lista le = n.listaEnlaces;
-		if (!le.vacia()) {
-		   for(Object q=le.primero();!q.equals(le.fin());
-                          q=le.siguiente(q)) {
-			Enlace e = (Enlace)le.recupera(q);
-			s += e;
-		   }
-		}
-		s += "\n";
-	   }
-	   return s;
-	 
-   } */
-    
+                if(b.getId() == userId) return b;
+
+        }
+  return null;
+  }
+
    
     public ArrayList getLista() {
         return users;

@@ -26,21 +26,10 @@ import java.util.Iterator;
 
         }
 
+
        return null;
         }
-        
-        //if (lista.isEmpty() ) return null;
-          //  int i;
-           // for (  i = 0  ; i < lista.size() ; i++);{
-            //  Object e = lista.get(i);
-             // if (e.equals(elemento)) return i;
-        
-         //   for(Object p = lista.primero(); !p.equals(lista.fin());
-           //            p = lista.siguiente(p)) {
-             //   Object e = lista.recupera(p);
-              //  if (e.equals(elemento)) return p;
-            
-            
+
         
      // fin buscar()
     static public void imprimir(ArrayList lista) {
@@ -53,8 +42,8 @@ import java.util.Iterator;
             }
             System.out.println();            
         
-    } // fin imprimir()
-} // fin class ListaUtil
+    } // 
+} // 
 
     
 

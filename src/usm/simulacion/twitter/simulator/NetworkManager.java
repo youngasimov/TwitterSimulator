@@ -58,7 +58,8 @@ public class NetworkManager{
     
     public User getUser(int id){
 
-        return null;
+        Object b = Red.buscarConId(users, id);
+        return (User)b;
     }
     
     public ArrayList getFollowers(User user){
@@ -72,8 +73,6 @@ public class NetworkManager{
         Red.listaNodosFollowing(user);
         return followings;
     }
-    
-   
     
     public void generateInitialRandomEvents(int events){
         
@@ -142,7 +141,6 @@ public class NetworkManager{
     
      public int getnUsers() {
         nUsers = Red.getnNodo();
-        System.out.println("El Numero de Usuarios en la Red es :" + Red.getnNodo());
         return nUsers;
     } 
     
@@ -167,47 +165,56 @@ public class NetworkManager{
 
             @Override
             public void addFollower(AddFollowerEvent event) {
-                onAddFollower(event.getUser(), event.getFollower());
-                onAddFollowing(event.getFollower(), event.getUser());
+                onAddFollower(event.getUserId() , event.getFollower() );
+                onAddFollowing(event.getFollower(), event.getUserId() );
             }
         });
-        
-        eventBus.registerEventHandler(AddFollowingEvent.TYPE, new AddFollowingEventHandler() {
+
+/*        eventBus.registerEventHandler(AddFollowingEvent.TYPE, new AddFollowingEventHandler() {
 
             @Override
             public void addFollowing(AddFollowingEvent event) {
-                onAddFollowing(event.getUser(), event.getFollowing());
+                onAddFollowing(event.getFollower(), event.getUserId() );
             }
-        });
+        }); */
     }
     
     private void onAddUser(User user ){
         if(user instanceof User){
             // inserta un usuario en un nodo de la red
-            Red.insertaNodo(user);
+            int id = user.getId();
+            Red.insertaNodo(user, id);
             
       // System.out.println("se a añadido un nuevo usuario al grafo: "+user.getName());
             
         }
     }
     
-    private void onAddFollower(User user, User follower){
-        if(user instanceof User && follower instanceof User){
-            
-            Red.insertaEnlaceFollower( user, follower );
+    private void onAddFollower(int UserId , int FollowerId){
+        //if(user instanceof User && follower instanceof User){
+          Object a = Red.buscarConId(users, UserId);
+          Object b = Red.buscarConId(users, FollowerId);
+          
+          Red.insertaEnlaceFollower(a,b );
             //System.out.println("el usuario : " +user.getName() + " sigue al usuario :" +follower.getName());
-            
-        }
+            return;
+        //}
         
     }
     
-    private void onAddFollowing(User user, User following){
-        if(user instanceof User && following instanceof User){
-        Red.insertaEnlaceFollowing(user, following );
+    private void onAddFollowing(int UserId , int followingId){
+        //if(user instanceof User && following instanceof User){
+        Object a = Red.buscarConId(users, UserId);
+          Object b = Red.buscarConId(users, followingId);
+          
+          Red.insertaEnlaceFollowing(a,b );
+            //System.out.println("el usuario : " +user.getName() + " sigue al usuario :" +follower.getName());
+            return;
+        
         //System.out.println(" el usuario : " +user.getName() + " sigue al usuario: " +following.getName());
         }
         
         
-    }
+    
     
 }
