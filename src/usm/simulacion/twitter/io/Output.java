@@ -14,6 +14,10 @@ import usm.simulacion.twitter.simulator.NewReTweetEvent;
 import usm.simulacion.twitter.simulator.NewReTweetEventHandler;
 import usm.simulacion.twitter.simulator.NewTweetEvent;
 import usm.simulacion.twitter.simulator.NewTweetEventHandler;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import usm.simulacion.twitter.simulator.EventsManager;
 
 /**
  *
@@ -23,6 +27,8 @@ public class Output {
     
     private EventBus eventBus;
     private NetworkManager networkManager;
+    private EventsManager eventsManager;
+
     
     public Output(EventBus eventBus,NetworkManager networkManager){
         this.eventBus = eventBus;
@@ -64,7 +70,18 @@ public class Output {
             @Override
             public void onSimulationEvent(SimulationEvent event) {
                 if(event.getState() == SimulationEvent.FINISH){
-                    System.out.println(getTime()+"El simulador ha finalizado");
+                    	try {
+			//Escritura
+			java.io.BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("Archivo.txt"));
+			bufferedWriter.append("Promedio Tweets RT en la red" + eventsManager.GetMetrica() );
+			bufferedWriter.flush();
+
+                        System.out.println(getTime()+"El simulador ha finalizado");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+                    
                 }
             }
         });
