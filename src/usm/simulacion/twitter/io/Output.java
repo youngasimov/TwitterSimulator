@@ -72,8 +72,8 @@ public class Output {
                 if(event.getState() == SimulationEvent.FINISH){
                     	try {
 			//Escritura
-			java.io.BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("Archivo.txt"));
-			bufferedWriter.append("Promedio Tweets RT en la red" + eventsManager.GetMetrica() );
+			java.io.BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("Reporte.txt"));
+			bufferedWriter.append("Reporte: Promedio Tweets RT en la red" + eventsManager.GetMetrica() );
 			bufferedWriter.flush();
 
                         System.out.println(getTime()+"El simulador ha finalizado");
