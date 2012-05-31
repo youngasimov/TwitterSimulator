@@ -18,7 +18,7 @@ public class RandomEventGenerator implements EventGeneratorAlgoritm{
 
     @Override
     public Double getDeltaTime() {
-        return Math.random()*3;
+        return Math.random()*6;
     }
 
     @Override
