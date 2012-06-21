@@ -18,12 +18,16 @@ public class User implements HasIncomingTweets, HasOwnTweets{
     private List<Tweet> ownTweets;
     private String name;
     private int id;
+    private int influence;
+    private int distributor;
     
     public User(int id, String name){
         this.id = id;
         this.name = name;
         incomingTweets = new ArrayList<Tweet>();
         ownTweets = new ArrayList<Tweet>();
+        influence = 50;
+        distributor = 50;
     }
     
     public String getName(){
@@ -36,6 +40,22 @@ public class User implements HasIncomingTweets, HasOwnTweets{
     
     public int getId(){
         return id;
+    }
+
+    public int getDistributor() {
+        return distributor;
+    }
+
+    public void setDistributor(int distributor) {
+        this.distributor = distributor;
+    }
+
+    public int getInfluence() {
+        return influence;
+    }
+
+    public void setInfluence(int influence) {
+        this.influence = influence;
     }
     
     public void clearIncomingTweets(){
