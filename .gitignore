@@ -6,3 +6,4 @@ project.xml
 private.xml
 *.class
 /build/
+/dist/
