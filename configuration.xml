@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Twitter>
+	<GlobalConfiguration>
+		<!--   tiempo máximo de simulación, luego genera el reporte  -->
+		<simulationTime>100</simulationTime>
+		<globalSeed>10000</globalSeed>
+	</GlobalConfiguration>
+
+	<UsersConfiguration>
+		<Users type="Common">
+
+			<!--   usuarios que se van a generar de este tipo  -->
+	        	<generate>10</generate>
+
+			<!--   función que determina a cuantos a a seguir cada usuario   -->
+			<followings function="Normal">
+				<param name="mean">40</param>
+				<param name="standartDeviation">1</param>
+			</followings>
+
+			<!--  en una escala de 0 a 100, indica que tan seguido es este tipo de usuario  -->
+			<followers>80</followers>
+
+			<!--  función que determina cuantos días pasan entre tweets de cada usuario en promedio, asignando un valor característico a cada usuario  -->
+			<daysPerTweet function="Beta">
+				<param name="a">0.21</param>
+				<param name="b">0.26</param>
+			</daysPerTweet>
+
+			<!--  función que determina cuantos tweets se generan por cada retweet de cada usuario en promedio, asignando un valor característico a cada usuario  -->
+			<tweetsPerRetweet function="Normal">
+				<param name="mean">20</param>
+				<param name="standartDeviation">1</param>
+			</tweetsPerRetweet>
+
+			<!--  función que determina cuantos tweets son retweetiados por otras personas en promedio, asignando un valor característico a cada usuario  -->
+			<tweetsPerRetweeted function="Normal">
+				<param name="mean">40</param>
+				<param name="standartDeviation">1</param>
+			</tweetsPerRetweeted>
+	
+			<!--  función que asigna el delta de tiempo del siguiente tweet o retweet del usuario, en base a los parámetros obtenidos con las funciones indicadas arriba  -->
+			<!--  los valores de los  parámetros son un multiplicador de la variable daysPerTweet -->
+			<eventGenerator function="Normal">
+				<param name="mean">1</param>
+				<param name="standartDeviation">5</param>
+			</eventGenerator>
+		</Users>
+		<Users type="Celebrity">
+	        	<generate>5</generate>
+			<followings function="Exponential">
+				<param name="mean">1000</param>
+			</followings>
+			<followers>40</followers>
+			<daysPerTweet function="Beta">
+				<param name="a">0.5</param>
+				<param name="b">3.1</param>
+			</daysPerTweet>
+			<tweetsPerRetweet function="Normal">
+				<param name="mean">20</param>
+				<param name="standartDeviation">1</param>
+			</tweetsPerRetweet>
+			<tweetsPerRetweeted function="Normal">
+				<param name="mean">40</param>
+				<param name="standartDeviation">1</param>
+			</tweetsPerRetweeted>
+			<eventGenerator function="Normal">
+				<param name="mean">1</param>
+				<param name="standartDeviation">0.33</param>
+			</eventGenerator>
+	    	</Users>
+		<Users type="Company">
+			<generate>3</generate>
+			<followings function="Exponential">
+				<param name="mean">800</param>
+			</followings>
+			<followers>10</followers>
+			<daysPerTweet function="Weibull">
+				<param name="k">0.5</param>
+				<param name="lambda">1.17</param>
+			</daysPerTweet>
+			<tweetsPerRetweet function="Normal">
+				<param name="mean">20</param>
+				<param name="standartDeviation">1</param>
+			</tweetsPerRetweet>
+			<tweetsPerRetweeted function="Normal">
+				<param name="mean">40</param>
+				<param name="standartDeviation">1</param>
+			</tweetsPerRetweeted>
+			<eventGenerator function="Normal">
+				<param name="mean">1</param>
+				<param name="standartDeviation">0.33</param>
+			</eventGenerator>
+	    	</Users>
+	</UsersConfiguration>
+</Twitter>

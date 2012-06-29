@@ -8,37 +8,44 @@ package usm.simulacion.twitter.probability;
  *
  * @author camilovera
  */
-public class Weibull extends BaseProbabilisticFunction{
+public class Weibull extends ComplexUniform{
 
     
-    private float k;
-    private float lambda;
+    private double k;
+    private double lambda;
     
-    public Weibull(float k, float lambda){
+    public Weibull(double k, double lambda){
         super();
         this.k = Math.abs(k);
         this.lambda=Math.abs(lambda);
     }
+    
+    public Weibull(double k, double lambda,double seed){
+        super((long)seed);
+        this.k = Math.abs(k);
+        this.lambda=Math.abs(lambda);
+    }
 
-    public float getK() {
+    public double getK() {
         return k;
     }
 
-    public void setK(float k) {
+    public void setK(double k) {
         this.k = Math.abs(k);
     }
 
-    public float getLambda() {
+    public double getLambda() {
         return lambda;
     }
 
-    public void setLambda(float lambda) {
+    public void setLambda(double lambda) {
         this.lambda = Math.abs(lambda);
     }
     
     @Override
     public int nextInt() {
-        return BaseProbabilisticFunction.getIntFromDouble(nextDuble());
+        double d = nextDuble();
+        return (int)Math.round(d);
     }
 
     @Override
@@ -48,7 +55,7 @@ public class Weibull extends BaseProbabilisticFunction{
 
     @Override
     public double nextDuble() {
-        return -lambda*Math.pow(Math.log(1-getUniform().nextDuble()), 1/k);
+        return -lambda*Math.pow(Math.log(1-super.nextDuble()), 1/k);
     }
     
 }

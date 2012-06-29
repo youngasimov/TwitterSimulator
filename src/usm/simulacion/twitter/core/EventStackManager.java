@@ -71,6 +71,7 @@ public class EventStackManager {
     }
     
     private FutureEventEvent nextEvent(){
+        
         Iterator<AutoSortedList<FutureEventEvent>> listas = eventStack.values().iterator();
         AutoSortedList<FutureEventEvent> primeros = new AutoSortedList<FutureEventEvent>(comparator);
         while(listas.hasNext()){

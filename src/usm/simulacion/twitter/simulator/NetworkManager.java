@@ -34,27 +34,60 @@ public class NetworkManager{
     }
     
     private EventBus eventBus;
-    private EventGeneratorAlgoritm algoritm;
-    private Map<String,String> textData;
-    private Map<String,Integer> intData;
-    private Map<String,Double> doubleData;
     private Map<User,LocalNetwork> red;
-    private Double time;
+    private double time;
+    private double maxSimulationTime;
+    private double minRetwitteredEveryXTweets;
+    private double maxRetwitterEveryXTweets;
+    private int lastTweetId;
     //private int nUsers;
     //Grafo Red = new Grafo();  // se crea el grafo que contendra la red.
     
     
-    public NetworkManager(EventBus eventBus,EventGeneratorAlgoritm algoritm){
+    public NetworkManager(EventBus eventBus, double maxSimulationTime){
         this.eventBus = eventBus;
-        this.algoritm = algoritm;
-        this.algoritm.setNetworkManager(this);
         red = new HashMap<User,LocalNetwork>();
         time = 0.0;
+        lastTweetId = 0;
+        this.maxSimulationTime = maxSimulationTime;
         bind();
+    }
+
+    public double getMaxSimulationTime() {
+        return maxSimulationTime;
+    }
+
+    public void setMaxSimulationTime(double maxSimulationTime) {
+        this.maxSimulationTime = maxSimulationTime;
     }
     
     public Double getCurrentTime(){
         return time;
+    }
+
+    public int getLastTweetId() {
+        return lastTweetId;
+    }
+
+    public void setLastTweetId(int lastTweetId) {
+        this.lastTweetId = lastTweetId;
+    }
+    
+
+    public double getMaxRetwitterEveryXTweets() {
+        return maxRetwitterEveryXTweets;
+    }
+
+    public void setMaxRetwitterEveryXTweets(double maxRetwitterEveryXTweets) {
+        this.maxRetwitterEveryXTweets = maxRetwitterEveryXTweets;
+    }
+
+    public double getMinRetwitteredEveryXTweets() {
+        return minRetwitteredEveryXTweets;
+    }
+
+    public void setMinRetwitteredEveryXTweets(double minRetwitteredEveryXTweets) {
+        this.minRetwitteredEveryXTweets = minRetwitteredEveryXTweets;
     }
     
     public ArrayList<User> getUsers(){
@@ -86,69 +119,6 @@ public class NetworkManager{
         }
     }
     
-   
-    
-    public void generateInitialRandomEvents(int events){
-        
-        //ejemplo
-        Event e;
-        for(int i=0;i<events;i++){
-            e = algoritm.generateEvent(null);
-            eventBus.fireEvent(new FutureEventEvent(algoritm.getDeltaTime(),time,e));
-        }
-
-    }
-    
-    public void generateEvent(Event procesedEvent){
-        Event e = algoritm.generateEvent(procesedEvent);
-        eventBus.fireEvent(new FutureEventEvent(time,algoritm.getDeltaTime(),e));
-    }
-    
-    public void addParam(String var,String value){
-        if(textData == null){
-            textData = new HashMap<String, String>();
-        }
-        textData.put(var, value);
-    }
-    
-    public void addParam(String var,Integer value){
-        if(intData == null){
-            intData = new HashMap<String, Integer>();
-        }
-        intData.put(var, value);
-    }
-    
-    public void addParam(String var,Double value){
-        if(doubleData == null){
-            doubleData = new HashMap<String, Double>();
-        }
-        doubleData.put(var, value);
-    }
-    
-    public String getTextParam(String var){
-        if(textData != null && textData.containsKey(var)){
-            return textData.get(var);
-        }else{
-            return null;
-        }
-    }
-    
-    public Integer getIntParam(String var){
-        if(intData != null && intData.containsKey(var)){
-            return intData.get(var);
-        }else{
-            return null;
-        }
-    }
-    
-    public Double getDoubleParam(String var){
-        if(doubleData != null && doubleData.containsKey(var)){
-            return doubleData.get(var);
-        }else{
-            return null;
-        }
-    }
-    
     
     private void bind(){
         eventBus.registerEventHandler(TimeEvent.TYPE, new TimeEventHandler() {
@@ -156,6 +126,7 @@ public class NetworkManager{
             @Override
             public void updateTime(Double currentTime) {
                 time = currentTime;
+                System.out.println(time+"/"+maxSimulationTime);
             }
         });
         
@@ -163,7 +134,8 @@ public class NetworkManager{
 
             @Override
             public void addUser(AddUserEvent event) {
-                onAddUser(event.getUser());
+                System.out.println("nuevo usuario: "+event.getUser().getName());
+                onAddUser(event);
             }
         });
         
@@ -171,6 +143,7 @@ public class NetworkManager{
 
             @Override
             public void addFollower(AddFollowerEvent event) {
+                System.out.println("el usuario "+event.getUserId()+" a empezado a ser seguido por el usuario "+event.getFollowerId());
                 onAddFollower(event.getUserId(), event.getFollowerId());
             }
         });
@@ -179,25 +152,27 @@ public class NetworkManager{
 
             @Override
             public void addFollowing(AddFollowingEvent event) {
+                System.out.println("el usuario "+event.getUserId()+" a empezado a seguir al usuario "+event.getFollowingId());
                 onAddFollowing(event.getUserId(), event.getFollowingId());
             }
         });
     }
     
-    private void onAddUser(User user){
-        red.put(user, new LocalNetwork());
-        //if(user instanceof User){
-            // inserta un usuario en un nodo de la red
-            //Red.insertaNodo(user);
-            
-      // System.out.println("se a añadido un nuevo usuario al grafo: "+user.getName());
-        //}
+    private void onAddUser(AddUserEvent userEvent){
+        User u = userEvent.getUser();
+        red.put(u, new LocalNetwork());
+        Tweet t = new Tweet(lastTweetId++);
+        t.setOwner(u);
+        t.setSteps(0);
+        t.setMessage("generico");
+        Event e = new NewTweetEvent(u, t);
+        eventBus.fireEvent(new FutureEventEvent(Math.abs(u.getNextEventTimeGenerator().nextDuble()),time,e));
     }
     
     private void onAddFollower(int user, int follower){
         List<User> users = new ArrayList<User>(red.keySet());
-        User aux = new User(user, null);
-        User aux2 = new User(follower, null);
+        User aux = new User(user, null,null);
+        User aux2 = new User(follower, null,null);
         User u = users.get(users.indexOf(aux));
         User f = users.get(users.indexOf(aux2));
         
@@ -218,20 +193,13 @@ public class NetworkManager{
     private void onAddFollowing(int user, int following){
         
         List<User> users = new ArrayList<User>(red.keySet());
-        User aux = new User(user, null);
-        User aux2 = new User(following, null);
+        User aux = new User(user, null,null);
+        User aux2 = new User(following, null,null);
         User u = users.get(users.indexOf(aux));
         User f = users.get(users.indexOf(aux2));
         
         red.get(u).followings.add(f);
         red.get(f).followers.add(u);
-        
-        //if(user instanceof User && following instanceof User){
-        //Red.insertaEnlaceFollowing(user, following );
-        //System.out.println(" el usuario : " +user.getName() + " sigue al usuario: " +following.getName());
-        //}
-        
-        
     }
     
 }

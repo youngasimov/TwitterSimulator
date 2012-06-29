@@ -6,6 +6,7 @@ package usm.simulacion.twitter.simulator;
 
 import java.util.ArrayList;
 import java.util.List;
+import usm.simulacion.twitter.probability.ProbabilisticFunction;
 
 /**
  *
@@ -13,21 +14,37 @@ import java.util.List;
  */
 public class User implements HasIncomingTweets, HasOwnTweets{
     
+    public static final String TYPE_COMMON = "Common";
+    public static final String TYPE_CELEBRITY = "Celebrity";
+    public static final String TYPE_COMPANY = "Company";
     
     private List<Tweet> incomingTweets;
     private List<Tweet> ownTweets;
     private String name;
+    private String type;
     private int id;
-    private int influence;
-    private int distributor;
+    private double daysPerTweet;
+    private double retweetEveryXTweets;
+    private double retweetedEveryXTweets;
+    private ProbabilisticFunction nextEventTimeGenerator;
     
-    public User(int id, String name){
+    public User(int id, String name, String tipo){
         this.id = id;
         this.name = name;
+        this.type = tipo;
         incomingTweets = new ArrayList<Tweet>();
         ownTweets = new ArrayList<Tweet>();
-        influence = 50;
-        distributor = 50;
+        daysPerTweet = Double.MAX_VALUE;
+        retweetEveryXTweets = Double.MAX_VALUE;
+        retweetedEveryXTweets = Double.MAX_VALUE;
+    }
+
+    public ProbabilisticFunction getNextEventTimeGenerator() {
+        return nextEventTimeGenerator;
+    }
+
+    public void setNextEventTimeGenerator(ProbabilisticFunction nextEventTimeGenerator) {
+        this.nextEventTimeGenerator = nextEventTimeGenerator;
     }
     
     public String getName(){
@@ -42,20 +59,36 @@ public class User implements HasIncomingTweets, HasOwnTweets{
         return id;
     }
 
-    public int getDistributor() {
-        return distributor;
+    public double getRetweetEveryXTweets() {
+        return retweetEveryXTweets;
     }
 
-    public void setDistributor(int distributor) {
-        this.distributor = distributor;
+    public void setRetweetEveryXTweets(double retweetEveryXTweets) {
+        this.retweetEveryXTweets = retweetEveryXTweets;
     }
 
-    public int getInfluence() {
-        return influence;
+    public double getRetweetedEveryXTweets() {
+        return retweetedEveryXTweets;
     }
 
-    public void setInfluence(int influence) {
-        this.influence = influence;
+    public void setRetweetedEveryXTweets(double retweetedEveryXTweets) {
+        this.retweetedEveryXTweets = retweetedEveryXTweets;
+    }
+
+    public double getDaysPerTweet() {
+        return daysPerTweet;
+    }
+
+    public void setDaysPerTweet(double daysPerTweet) {
+        this.daysPerTweet = daysPerTweet;
+    }
+    
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
     
     public void clearIncomingTweets(){

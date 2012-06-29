@@ -2,42 +2,30 @@ package usm.simulacion.twitter.simulator;
 
 import java.util.List;
 import usm.simulacion.twitter.core.EventBus;
-import usm.simulacion.twitter.core.SimulationEvent;
+import usm.simulacion.twitter.core.FutureEventEvent;
+import usm.simulacion.twitter.probability.Normal;
 
 /**
  *
  * @author camilovera
  */
-public class EventsManager {
+public class TweetsManager {
     
     private EventBus eventBus;
     private NetworkManager networkManager;
-    private Double maxTime = 5000.0;
-    private Double securityDelta = 200.0;
     
-    public EventsManager(EventBus eventBus,NetworkManager networkManager){
+    public TweetsManager(EventBus eventBus,NetworkManager networkManager){
         this.eventBus = eventBus;
         this.networkManager = networkManager;
         bind();
     }
     
     private void bind(){
-        
-        this.eventBus.registerEventHandler(TimeEvent.TYPE, new TimeEventHandler() {
-
-            @Override
-            public void updateTime(Double currentTime) {
-                if(currentTime >= (maxTime-securityDelta)){
-                    eventBus.fireEvent(new SimulationEvent(SimulationEvent.FINISH));
-                }
-            }
-        });
-        
         this.eventBus.registerEventHandler(NewTweetEvent.TYPE, new NewTweetEventHandler() {
 
             @Override
             public void onNewTweet(NewTweetEvent event) {
-                EventsManager.this.onNewTweet(event);
+                TweetsManager.this.onNewTweet(event);
             }
         });
         
@@ -45,7 +33,7 @@ public class EventsManager {
 
             @Override
             public void onReTweet(NewReTweetEvent event) {
-                EventsManager.this.onNewReTweet(event);
+                TweetsManager.this.onNewReTweet(event);
             }
         });
     }
@@ -67,8 +55,17 @@ public class EventsManager {
             t.setSteps(1);
             t.setOwner(event.getUser());
             follower.addIncomingTweet(t);
+            double weight = follower.getRetweetEveryXTweets()*(1/event.getUser().getRetweetedEveryXTweets());
+            double maxWeight = networkManager.getMaxRetwitterEveryXTweets()*(1/networkManager.getMinRetwitteredEveryXTweets());
+            Normal n = new Normal(1.3, 0.5);
+            double d = n.nextDuble();
+            if(weight/maxWeight > d){
+                eventBus.fireEvent(new FutureEventEvent(Math.abs(follower.getNextEventTimeGenerator().nextDuble()), networkManager.getCurrentTime(), new NewReTweetEvent(follower, t)));
+            }
         }
-        networkManager.generateEvent(event);
+        t = new Tweet(networkManager.getLastTweetId()+1);
+        networkManager.setLastTweetId(t.getId());
+        eventBus.fireEvent(new FutureEventEvent(Math.abs(event.getUser().getNextEventTimeGenerator().nextDuble()), networkManager.getCurrentTime(), new NewTweetEvent(event.getUser(), t)));
     }
     
     /**
@@ -85,7 +82,12 @@ public class EventsManager {
             t.setTimeSignature(networkManager.getCurrentTime());
             t.setOwner(event.getTweet().getOwner());
             follower.addIncomingTweet(t);
+            double weight = follower.getRetweetEveryXTweets()*(1/event.getUser().getRetweetedEveryXTweets())*(1/t.getSteps());
+            double maxWeight = networkManager.getMaxRetwitterEveryXTweets()*(1/networkManager.getMinRetwitteredEveryXTweets());
+            Normal n = new Normal(0.7, 0.2);
+            if(weight/maxWeight > n.nextDuble()){
+                eventBus.fireEvent(new FutureEventEvent(Math.abs(follower.getNextEventTimeGenerator().nextDuble()), networkManager.getCurrentTime(), new NewReTweetEvent(follower, t)));
+            }
         }
-        networkManager.generateEvent(event);
     }
 }
