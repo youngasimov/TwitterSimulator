@@ -1,6 +1,7 @@
 package usm.simulacion.twitter.simulator;
 
 import java.util.List;
+import java.util.Random;
 import usm.simulacion.twitter.core.EventBus;
 import usm.simulacion.twitter.core.FutureEventEvent;
 import usm.simulacion.twitter.probability.Normal;
@@ -13,10 +14,18 @@ public class TweetsManager {
     
     private EventBus eventBus;
     private NetworkManager networkManager;
+    private Normal tweetNormal;
+    private Normal reTweetNormal;
+    private double divisor;
+    private Random r;
     
-    public TweetsManager(EventBus eventBus,NetworkManager networkManager){
+    public TweetsManager(EventBus eventBus,NetworkManager networkManager, double tweetMean,double tweetDeviation,double reTweetMean,double reTweetDeviation, double divisor){
         this.eventBus = eventBus;
         this.networkManager = networkManager;
+        tweetNormal = new Normal(tweetMean, tweetDeviation);
+        reTweetNormal = new Normal(reTweetMean,reTweetDeviation);
+        this.divisor = divisor; 
+        r = new Random((long)divisor);
         bind();
     }
     
@@ -43,23 +52,26 @@ public class TweetsManager {
      * @param event 
      */
     private void onNewTweet(NewTweetEvent event){
-        event.getTweet().setSteps(0);
-        event.getTweet().setTimeSignature(networkManager.getCurrentTime());
-        event.getUser().addOwnTweet(event.getTweet());
+        event.getTweet().setSteps(1);
+        //event.getTweet().setTimeSignature(networkManager.getCurrentTime());
+        //event.getUser().addOwnTweet(event.getTweet());
         List<User> followers = networkManager.getFollowers(event.getUser());
+        if(followers.isEmpty()){
+            return;
+        }
         Tweet t;
         for(User follower:followers){
             t = new Tweet(event.getTweet().getId());
-            t.setMessage(event.getTweet().getMessage());
+            //t.setMessage(event.getTweet().getMessage());
             t.setTimeSignature(event.getTweet().getTimeSignature());
             t.setSteps(1);
             t.setOwner(event.getUser());
-            follower.addIncomingTweet(t);
+            //follower.addIncomingTweet(t);
             double weight = follower.getRetweetEveryXTweets()*(1/event.getUser().getRetweetedEveryXTweets());
             double maxWeight = networkManager.getMaxRetwitterEveryXTweets()*(1/networkManager.getMinRetwitteredEveryXTweets());
-            Normal n = new Normal(1.3, 0.5);
-            double d = n.nextDuble();
-            if(weight/maxWeight > d){
+            //double d = Math.abs(tweetNormal.nextDuble());
+            double d = r.nextDouble();
+            if(weight/maxWeight > d-0.05){
                 eventBus.fireEvent(new FutureEventEvent(Math.abs(follower.getNextEventTimeGenerator().nextDuble()), networkManager.getCurrentTime(), new NewReTweetEvent(follower, t)));
             }
         }
@@ -74,18 +86,23 @@ public class TweetsManager {
      */
     private void onNewReTweet(NewReTweetEvent event){
         List<User> followers = networkManager.getFollowers(event.getUser());
+        if(followers.isEmpty()){
+            return;
+        }
         Tweet t;
         for(User follower:followers){
             t = new Tweet(event.getTweet().getId());
-            t.setMessage(event.getTweet().getMessage());
+            //t.setMessage(event.getTweet().getMessage());
             t.setSteps(event.getTweet().getSteps()+1);
             t.setTimeSignature(networkManager.getCurrentTime());
             t.setOwner(event.getTweet().getOwner());
-            follower.addIncomingTweet(t);
-            double weight = follower.getRetweetEveryXTweets()*(1/event.getUser().getRetweetedEveryXTweets())*(1/t.getSteps());
+            //follower.addIncomingTweet(t);
+            //exp = new Exponential(-t.getSteps());
+            double weight = follower.getRetweetEveryXTweets()*(1/event.getUser().getRetweetedEveryXTweets())-((1/divisor)*(t.getSteps()));
             double maxWeight = networkManager.getMaxRetwitterEveryXTweets()*(1/networkManager.getMinRetwitteredEveryXTweets());
-            Normal n = new Normal(0.7, 0.2);
-            if(weight/maxWeight > n.nextDuble()){
+            //double d = Math.abs(reTweetNormal.nextDuble());
+            double d = r.nextDouble();
+            if(weight/maxWeight > d){
                 eventBus.fireEvent(new FutureEventEvent(Math.abs(follower.getNextEventTimeGenerator().nextDuble()), networkManager.getCurrentTime(), new NewReTweetEvent(follower, t)));
             }
         }

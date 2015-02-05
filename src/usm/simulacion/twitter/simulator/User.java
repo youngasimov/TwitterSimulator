@@ -156,4 +156,13 @@ public class User implements HasIncomingTweets, HasOwnTweets{
     public int hashCode() {
         return id;
     }
+    
+    public User clone(){
+        User u = new User(id,name,type);
+        u.setDaysPerTweet(daysPerTweet);
+        u.setRetweetEveryXTweets(retweetEveryXTweets);
+        u.setRetweetedEveryXTweets(retweetedEveryXTweets);
+        u.setNextEventTimeGenerator(nextEventTimeGenerator);
+        return u;
+    }
 }

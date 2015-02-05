@@ -4,6 +4,8 @@
  */
 package usm.simulacion.twitter.probability;
 
+import org.apache.commons.math3.distribution.WeibullDistribution;
+
 /**
  *
  * @author camilovera
@@ -13,17 +15,20 @@ public class Weibull extends ComplexUniform{
     
     private double k;
     private double lambda;
+    private WeibullDistribution wd;
     
     public Weibull(double k, double lambda){
         super();
         this.k = Math.abs(k);
         this.lambda=Math.abs(lambda);
+        wd = new WeibullDistribution(k, lambda);
     }
     
     public Weibull(double k, double lambda,double seed){
         super((long)seed);
         this.k = Math.abs(k);
         this.lambda=Math.abs(lambda);
+        wd = new WeibullDistribution(k, lambda);
     }
 
     public double getK() {
@@ -55,7 +60,7 @@ public class Weibull extends ComplexUniform{
 
     @Override
     public double nextDuble() {
-        return -lambda*Math.pow(Math.log(1-super.nextDuble()), 1/k);
+        return wd.inverseCumulativeProbability(super.nextDuble());
     }
     
 }

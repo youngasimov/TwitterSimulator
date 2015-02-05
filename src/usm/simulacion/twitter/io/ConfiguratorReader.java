@@ -23,7 +23,14 @@ public class ConfiguratorReader {
     private List<String> firstNames;
     private List<String> lastNames;
     private List<String> marcas;
-    private double seed;
+    private long seed;
+    private double tweetMean;
+    private double tweetDeviation;
+    private double reTweetMean;
+    private double reTweetDeviation;
+    private double reTweetDivisor;
+    private int simulations;
+    private int cores;
 
     public void cargarDatos(){
         try{
@@ -69,7 +76,34 @@ public class ConfiguratorReader {
     public List<String> getMarcas() {
         return marcas;
     }
-    
+
+    public int getCores() {
+        return cores;
+    }
+
+    public double getReTweetDeviation() {
+        return reTweetDeviation;
+    }
+
+    public double getReTweetDivisor() {
+        return reTweetDivisor;
+    }
+
+    public double getReTweetMean() {
+        return reTweetMean;
+    }
+
+    public int getSimulations() {
+        return simulations;
+    }
+
+    public double getTweetDeviation() {
+        return tweetDeviation;
+    }
+
+    public double getTweetMean() {
+        return tweetMean;
+    }
     
     public void cargarConfiguracion() {
         try {
@@ -80,8 +114,14 @@ public class ConfiguratorReader {
             doc.getDocumentElement().normalize();
             e = doc.getDocumentElement();
             usersConfiguration = e.getElementsByTagName("Users");
-            Node gseed = e.getElementsByTagName("globalSeed").item(0).getFirstChild();
-            seed = Double.parseDouble(e.getElementsByTagName("globalSeed").item(0).getFirstChild().getNodeValue());
+            seed = Long.parseLong(e.getElementsByTagName("globalSeed").item(0).getFirstChild().getNodeValue());
+            simulations = Integer.parseInt(e.getElementsByTagName("simulations").item(0).getFirstChild().getNodeValue());
+            cores = Integer.parseInt(e.getElementsByTagName("cores").item(0).getFirstChild().getNodeValue());
+            tweetMean = Double.parseDouble(e.getElementsByTagName("tweetMean").item(0).getFirstChild().getNodeValue());
+            tweetDeviation = Double.parseDouble(e.getElementsByTagName("tweetDeviation").item(0).getFirstChild().getNodeValue());
+            reTweetMean = Double.parseDouble(e.getElementsByTagName("reTweetMean").item(0).getFirstChild().getNodeValue());
+            reTweetDeviation = Double.parseDouble(e.getElementsByTagName("reTweetDeviation").item(0).getFirstChild().getNodeValue());
+            reTweetDivisor = Double.parseDouble(e.getElementsByTagName("reTweetDivisor").item(0).getFirstChild().getNodeValue());
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -92,7 +132,7 @@ public class ConfiguratorReader {
         return Integer.decode(getTagValue("simulationTime",getTagElement("GlobalConfiguration", e)));
     }
     
-    public double getGlobalSeed(){
+    public long getGlobalSeed(){
         return seed;
     }
     
@@ -176,7 +216,7 @@ public class ConfiguratorReader {
     }
     
     
-    public static ProbabilisticFunction getFunction(String name, Map<String,String> params,double seed){
+    public static ProbabilisticFunction getFunction(String name, Map<String,String> params,long seed){
         if(name.equals("Normal")){
             return new Normal(Double.parseDouble(params.get("mean")), Double.parseDouble(params.get("standartDeviation")),seed);
         }else if(name.equals("Beta")){
@@ -186,7 +226,7 @@ public class ConfiguratorReader {
         }else if(name.equals("Exponential")){
             return new Exponential(Double.parseDouble(params.get("mean")),seed);
         }else if(name.equals("Uniform")){
-            return new ComplexUniform((long)seed);
+            return new ComplexUniform(seed);
         }else{
             return null;
         }
@@ -207,45 +247,4 @@ public class ConfiguratorReader {
             return null;
         }
     }
-    
-    /*
-     public void LeerUsuarios(EventBus bus){
-        NodeList listaPersonas = e.getElementsByTagName("User");
-        for (int i = 0; i < listaPersonas.getLength(); i ++) {
-
-            Element persona = (Element)listaPersonas.item(i);
-            String name = persona.getAttribute("name");
-            String id = persona.getAttribute("id");
-            String perfil = persona.getAttribute("tipo");
-            User u = new User(Integer.decode(id),name,perfil);
-            bus.fireEvent(new AddUserEvent(u));
-        }
-
-    }
-    
-    public void leerFollowers(EventBus bus){
-        NodeList listaPersonas = e.getElementsByTagName("follow");
-        for (int i = 0; i < listaPersonas.getLength(); i ++) {
-            Element persona = (Element)listaPersonas.item(i);
-            String userId = persona.getAttribute("userid");
-            String followerid = persona.getAttribute("Follower");
-            bus.fireEvent(new AddFollowerEvent(Integer.decode(userId), Integer.decode(followerid)));
-        }
-    }
-    
-    public void leerParameters(NetworkManager networkmanager){
-        NodeList listaParameters = e.getElementsByTagName("Parameter");
-        for (int i = 0; i < listaParameters.getLength(); i ++) {
-            Element Parameter = (Element)listaParameters.item(i);
-            String name = Parameter.getAttribute("name");
-            String valor = Parameter.getAttribute("valor");
-            networkmanager.addParam(name, Double.parseDouble(valor));
-
-
-
-        }
-    }
-    * 
-    */
-
 }

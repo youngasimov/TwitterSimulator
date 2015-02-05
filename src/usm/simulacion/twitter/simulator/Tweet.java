@@ -10,7 +10,7 @@ package usm.simulacion.twitter.simulator;
  */
 public class Tweet{
     
-    private String messagee;
+    //private String messagee;
     private int id;
     private int steps;
     private double timeSignature;
@@ -32,9 +32,9 @@ public class Tweet{
         this.timeSignature = timeSignature;
     }
 
-    public void setMessage(String messagee) {
+    /*public void setMessage(String messagee) {
         this.messagee = messagee;
-    }
+    }*/
 
     public void setOwner(User owner) {
         this.owner = owner;
@@ -43,10 +43,10 @@ public class Tweet{
     public void setSteps(int steps) {
         this.steps = steps;
     }
-    
+    /*
     public String getMessage(){
         return messagee;
-    }
+    }*/
     
     public int getSteps(){
         return steps;

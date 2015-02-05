@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import usm.simulacion.twitter.core.Event;
-import usm.simulacion.twitter.core.EventBus;
-import usm.simulacion.twitter.core.FutureEventEvent;
+import usm.simulacion.twitter.MainSimulator;
+import usm.simulacion.twitter.core.*;
 //import usm.simulacion.twitter.core.SimulationEvent;
 
 
@@ -126,7 +125,17 @@ public class NetworkManager{
             @Override
             public void updateTime(Double currentTime) {
                 time = currentTime;
-                System.out.println(time+"/"+maxSimulationTime);
+                //System.out.println(time+"/"+maxSimulationTime);
+            }
+        });
+        
+        eventBus.registerEventHandler(SimulationEvent.TYPE, new SimulationEventHandler() {
+
+            @Override
+            public void onSimulationEvent(SimulationEvent event) {
+                if(event.getState() == SimulationEvent.RESET){
+                    onReset();
+                }
             }
         });
         
@@ -134,7 +143,7 @@ public class NetworkManager{
 
             @Override
             public void addUser(AddUserEvent event) {
-                System.out.println("nuevo usuario: "+event.getUser().getName());
+                //System.out.println("nuev@"+event.getUser().getType()+":\t\t"+event.getUser().getName());
                 onAddUser(event);
             }
         });
@@ -143,7 +152,7 @@ public class NetworkManager{
 
             @Override
             public void addFollower(AddFollowerEvent event) {
-                System.out.println("el usuario "+event.getUserId()+" a empezado a ser seguido por el usuario "+event.getFollowerId());
+                //System.out.println("el usuario "+event.getUserId()+" a empezado a ser seguido por el usuario "+event.getFollowerId());
                 onAddFollower(event.getUserId(), event.getFollowerId());
             }
         });
@@ -152,10 +161,26 @@ public class NetworkManager{
 
             @Override
             public void addFollowing(AddFollowingEvent event) {
-                System.out.println("el usuario "+event.getUserId()+" a empezado a seguir al usuario "+event.getFollowingId());
+                //System.out.println("el usuario "+event.getUserId()+" a empezado a seguir al usuario "+event.getFollowingId());
                 onAddFollowing(event.getUserId(), event.getFollowingId());
             }
         });
+    }
+    
+    private void onReset(){
+        time = 0;
+        lastTweetId = 0;
+        for(User u:red.keySet()){
+            u.getIncomingTweets().clear();
+            u.getOwnTweets().clear();
+            Tweet t = new Tweet(lastTweetId++);
+            t.setOwner(u);
+            t.setSteps(0);
+            //t.setMessage("generico");
+            Event e = new NewTweetEvent(u, t);
+            u.getNextEventTimeGenerator().setSeed((long)(MainSimulator.random.nextDuble()*10000));
+            eventBus.fireEvent(new FutureEventEvent(Math.abs(u.getNextEventTimeGenerator().nextDuble()),time,e));
+        }
     }
     
     private void onAddUser(AddUserEvent userEvent){
@@ -164,9 +189,10 @@ public class NetworkManager{
         Tweet t = new Tweet(lastTweetId++);
         t.setOwner(u);
         t.setSteps(0);
-        t.setMessage("generico");
+        //t.setMessage("generico");
         Event e = new NewTweetEvent(u, t);
-        eventBus.fireEvent(new FutureEventEvent(Math.abs(u.getNextEventTimeGenerator().nextDuble()),time,e));
+        double delta = u.getNextEventTimeGenerator().nextDuble();
+        eventBus.fireEvent(new FutureEventEvent(Math.abs(delta),time,e));
     }
     
     private void onAddFollower(int user, int follower){
@@ -176,17 +202,12 @@ public class NetworkManager{
         User u = users.get(users.indexOf(aux));
         User f = users.get(users.indexOf(aux2));
         
-        red.get(u).followers.add(f);
-        red.get(f).followings.add(u);
-
-
-        //if(user instanceof User && follower instanceof User){
-            // el grafo tiene pesos en los enlaces, le puse el tiempo para 
-            //ponerle algo no mas, en realidad puede ser cualquier numero.
-          //  Red.insertaEnlaceFollower( user, follower );
-            //System.out.println("el usuario : " +user.getName() + " sigue al usuario :" +follower.getName());
-            
-       // }
+        if(!red.get(u).followers.contains(f)){
+            red.get(u).followers.add(f);
+        }
+        if(!red.get(f).followings.contains(u)){
+            red.get(f).followings.add(u);
+        }
         
     }
     
@@ -198,8 +219,12 @@ public class NetworkManager{
         User u = users.get(users.indexOf(aux));
         User f = users.get(users.indexOf(aux2));
         
-        red.get(u).followings.add(f);
-        red.get(f).followers.add(u);
+        if(!red.get(u).followings.contains(f)){
+            red.get(u).followings.add(f);
+        }
+        if(!red.get(f).followers.contains(u)){
+            red.get(f).followers.add(u);
+        }
     }
     
 }

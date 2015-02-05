@@ -47,6 +47,8 @@ public class EventStackManager {
                     onSimulationStart();
                 }else if(event.getState() == SimulationEvent.FINISH){
                     onSimulationFinish();
+                }else if(event.getState() == SimulationEvent.RESET){
+                    onSimulationReset();
                 }
             }
         });
@@ -82,5 +84,11 @@ public class EventStackManager {
         }
         FutureEventEvent selectedEvent = primeros.first();
         return eventStack.get(selectedEvent.getFutureEvent().getType()).pollFirst();
+    }
+    
+    private void onSimulationReset(){
+        for(Type t:eventStack.keySet()){
+            eventStack.get(t).clear();
+        }
     }
 }

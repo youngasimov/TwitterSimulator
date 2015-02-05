@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package usm.simulacion.twitter.probability;
 
 import java.util.Random;
@@ -28,12 +24,17 @@ public class ComplexUniform extends Uniform {
     
     public ComplexUniform(){
         this(-275920);
-        r= new Random(-275920);
     }
     
     public ComplexUniform(long seed){
+        super(seed);
         this.seed = seed;
-        r= new Random(seed);
+    }
+
+    @Override
+    public void setSeed(long seed) {
+        super.setSeed(seed);
+        this.seed = seed;
     }
     
     @Override
@@ -48,8 +49,7 @@ public class ComplexUniform extends Uniform {
 
     @Override
     public double nextDuble() {
-        return r.nextDouble();
-        /*int j;
+        int j;
         long k;
         double iy = 0;
         long[] iv = new long[NTAB];
@@ -73,7 +73,12 @@ public class ComplexUniform extends Uniform {
         j=(int) (iy/NDIV);
         iy=iv[j];
         iv[j] = seed;
-        if ((temp=AM*iy) > RNMX){ return Math.abs(RNMX);}
-        else{ return Math.abs(temp);}*/
+        double delta = getMax() - getMin();
+        if ((temp=AM*iy) > RNMX){
+            return RNMX%delta+getMin();
+        }
+        else{
+            return temp%delta+getMin();
+        }
     }
 }

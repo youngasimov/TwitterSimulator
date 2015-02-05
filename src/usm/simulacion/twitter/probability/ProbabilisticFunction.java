@@ -13,5 +13,6 @@ public interface ProbabilisticFunction {
     public int nextInt();
     public float nextFloat();
     public double nextDuble();
+    public void setSeed(long seed);
     
 }

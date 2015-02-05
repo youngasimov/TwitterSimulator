@@ -8,6 +8,7 @@ public class SimulationEvent implements Event<SimulationEventHandler> {
 
     public static final int START = 1;
     public static final int FINISH = 2;
+    public static final int RESET = 3;
     
     public static Type<SimulationEventHandler> TYPE = new Type<SimulationEventHandler>();
     

@@ -12,73 +12,63 @@ import java.util.Random;
  */
 public class Uniform implements ProbabilisticFunction {
     
-    private double seed;
-    private int min;
-    private int max;
+    private long seed;
+    private double min;
+    private double max;
     private Random r;
     
     public Uniform(){
-        r = new Random(-275920);
+        this(-275920);
     }
     
-    public Uniform(double seed){
-        r = new Random((long)seed);
+    public Uniform(long seed){
+        r = new Random(seed);
+        max = 1;
+        min = 0;
     }
 
-    public int getMax() {
+    public double getMax() {
         return max;
     }
 
-    public void setMax(int max) {
+    public void setMax(double max) {
         this.max = max;
     }
 
-    public int getMin() {
+    public double getMin() {
         return min;
     }
 
-    public void setMin(int min) {
+    public void setMin(double min) {
         this.min = min;
     }
 
-    public double getSeed() {
+    public long getSeed() {
         return seed;
     }
 
-    public void setSeed(double seed) {
-        if(seed>1){
-            seed = seed/Math.ulp(seed);
-        }
+    @Override
+    public void setSeed(long seed) {
         this.seed = seed;
         r = new Random((long)seed);
     }
 
     @Override
     public int nextInt() {
-        return r.nextInt();
+        double delta = max - min;
+        return (int)(Math.round((r.nextDouble()%delta)+min)%Integer.MAX_VALUE);
     }
 
     @Override
     public float nextFloat() {
-        return r.nextFloat();
+        float delta = (float)(max - min);
+        return (r.nextFloat()%delta)+(float)min;
     }
 
     @Override
     public double nextDuble() {
-        return r.nextDouble();
-    }
-    
-    public static int getIntFromDouble(double value){
-        
-        double aux = value;
-        double potencia = 1;
-        double resto = value%1;
-        while(resto!=0 && aux<Integer.MAX_VALUE){
-            aux = aux*10;
-            resto = aux%1;
-            potencia = potencia*10;
-        }
-        return (int)(value*(potencia/10));
+        double delta = max - min;
+        return (r.nextDouble()%delta)+min;
     }
     
 }
